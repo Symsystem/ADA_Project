@@ -7,7 +7,14 @@ By analysing the tweets’ content (including hashtags) we could identify patter
 
 
 ## Data Description
-TODO
+The dataset consists of geolocated tweets in the Swiss area during four years.
+We will focus our attention in some particular fields of the tweets:
+- id, the integer representation of the unique identifier for the tweet;
+- coordinates, which represents the geographic location of the tweet as reported by the user;
+- created_at, which gives the UTC time when the tweet was created;
+- text, which corresponds to the actual UTF-8 text of the status update;
+- user, which corresponds to the user who posted the tweet.
+
 
 ## Feasibility and Risks
 ⇒ Dealing with the visualization libraries and tools
