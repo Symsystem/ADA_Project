@@ -17,9 +17,9 @@ We will focus our attention in some particular fields of the tweets:
 
 
 ## Feasibility and Risks
-⇒ Dealing with the visualization libraries and tools
-⇒ The interactive timeline with all the functionalities will be difficult to implement.
-⇒ Creating a kind of web application with parameters we want to input => creating a specific map based on these parameters.
+- Dealing with the visualization libraries and tools will take some time.
+- The interactive timeline with all the functionalities will be difficult to implement.
+- Creating a kind of web application with parameters we want to input => creating a specific map based on these parameters.
 
 
 ## Deliverables
@@ -27,4 +27,6 @@ By the end of the project we would like to present a web page/web application wi
 
 
 ## Timeplan
-December => finishing everything to be free for the exams and Christmas :D
+- By the end of November the data have been cleaned.
+- Before the vacations: at least one map has been done. We can make first conclusions.
+- Everything finished for the end of January
