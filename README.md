@@ -9,21 +9,21 @@ By analysing the tweets’ content (including hashtags) we could identify patter
 ## Data Description
 The dataset consists of geolocated tweets in the Swiss area during four years.
 We will focus our attention in some particular fields of the tweets:
-- id, the integer representation of the unique identifier for the tweet;
-- coordinates, which represents the geographic location of the tweet as reported by the user;
-- created_at, which gives the UTC time when the tweet was created;
-- text, which corresponds to the actual UTF-8 text of the status update;
-- user, which corresponds to the user who posted the tweet.
+- **id**, the integer representation of the unique identifier for the tweet;
+- **coordinates**, which represents the geographic location of the tweet as reported by the user;
+- **created_at**, which gives the UTC time when the tweet was created;
+- **text**, which corresponds to the actual UTF-8 text of the status update;
+- **user**, which corresponds to the user who posted the tweet.
 
 
 ## Feasibility and Risks
-- Dealing with the visualization libraries and tools will take some time.
-- The interactive timeline with all the functionalities will be difficult to implement.
-- Creating a kind of web application with parameters we want to input => creating a specific map based on these parameters.
+One of the main difficulties will be to deal with the **visualization libraries and tools**, since those have never been used by any of the group members.
+Implementing an **interactive timeline** encompassing all the desired functionalities will also be one of the problems the team will encounter.
+Furthermore, the web page/web application should take into account the customizable parameters and map them into a specific visualization that illustrates everything in a perceptible manner.
 
 
 ## Deliverables
-By the end of the project we would like to present a web page/web application with which the users would be able to interact, namely they would be able to go through the timeline to see the evolution of the mobility flows of the users, as well as see the same evolution in a personalized period of time.
+By the end of the project, we would like to present a web page/web application with which the users would be able to interact, namely they would be able to go through the timeline to see the evolution of the mobility flows of the users, as well as see the same evolution in a personalized period of time.
 
 
 ## Timeplan
