@@ -27,6 +27,9 @@ By the end of the project, we would like to deliver a web page/web application w
 
 
 ## Timeplan
-- By the end of November the data have been cleaned.
-- Before the vacations: at least one map has been done. We can make first conclusions.
-- Everything finished for the end of January
+
+![alt text](https://github.com/Symsystem/ADA_Project/raw/master/images/gantt_chart.png)
+
+All the data will be gathered from the clusters during November and, by the end of the month, all the data will be clean (picking the most relevant users, etc...).
+Throughout December, we'll implement the visualization, but in a static way. By the end of the month, we'll start adding interactivity to it. We'll also start drawing some conclusions to help us go from one stage to the other.
+January will be dedicated to build the interactive application (timeline and customizable parameters). The final conclusions will be gathered and we'll take some time to prepare the symposium.
