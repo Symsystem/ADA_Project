@@ -1,0 +1,32 @@
+.country-border {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.2;
+}
+
+.cantons-border {
+  fill: none;
+  stroke: #252525;
+  stroke-width: 1;
+}
+
+.municipality-border {
+  stroke: #000;
+  stroke-width: .3;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis line, .axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+#key    {
+    position: absolute;
+    top:90px;
+    left: 50px;
+}
