@@ -1,9 +1,15 @@
-# MOBILITY FLOWS IN SWITZERLAND (SwissFlows)
+# MOBILITY EVENTS IN SWITZERLAND (SwissFlows)
 
 ## Abstract
-The main goal of this project will be to create an interactive map (focusing on Switzerland) showing all the information obtained from the geolocated tweets in a intuitive manner.
-We would like to start by representing the daily routine of the users based on their geolocation throughout the day. We could then identify events that potentially change these normal commutations. A timeline focusing on the different users would help identify such events since a disruption (either occasional or permanent) in this routine would be visible.
-By analysing the tweets’ content (including hashtags), we could identify patterns in the group behavior during certain events (like concerts, conventions, etc…).
+The main goal of this project will be to create an interactive and intuitive map (focusing on Switzerland) showing the information extracted from the geolocated tweets.
+
+We would like to start by representing the **density** of the tweets in the different cantons and municipalities of Switzerland.
+
+Then, we would like to make an analysis of the **sentiment** associated with the tweets and, again, a visualization according to canton/municipality would be provided.
+
+Finally, we would focus on **event detection** and its visualization. By analysing the tweets’ content (including hashtags), we would like to identify patterns in the group behavior during certain events (like concerts, conventions, etc…).
+
+The three maps (density, sentiment and events) share the underlying **visualization framework**, that being the backbone of this project.
 
 
 ## Data Description
