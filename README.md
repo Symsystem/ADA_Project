@@ -2,10 +2,14 @@
 
 ## Abstract
 The main goal of this project will be to create an interactive and intuitive map (focusing on Switzerland) showing the information extracted from the geolocated tweets.
-We would like to start by representing the density of the tweets in the different cantons and municipalities of Switzerland.
-Then, we would like to make an analysis of the sentiment associated with the tweets and, again, a visualization according to canton/municipality would be provided.
-Finally, we would focus on event detection and its visualization. By analysing the tweets’ content (including hashtags), we would like to identify patterns in the group behavior during certain events (like concerts, conventions, etc…).
-The three maps (density, sentiment and events) share the underlying visualization framework, that being the backbone of this project.
+
+We would like to start by representing the **density** of the tweets in the different cantons and municipalities of Switzerland.
+
+Then, we would like to make an analysis of the **sentiment** associated with the tweets and, again, a visualization according to canton/municipality would be provided.
+
+Finally, we would focus on **event detection** and its visualization. By analysing the tweets’ content (including hashtags), we would like to identify patterns in the group behavior during certain events (like concerts, conventions, etc…).
+
+The three maps (density, sentiment and events) share the underlying **visualization framework**, that being the backbone of this project.
 
 
 ## Data Description
