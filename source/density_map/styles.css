@@ -1,10 +1,10 @@
-.country-border {
+.country {
     fill: none;
     stroke: #000;
     stroke-width: 1.2;
 }
 
-.cantons-border {
+.cantons {
   fill: none;
   stroke: #252525;
   stroke-width: 1;
