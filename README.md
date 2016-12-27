@@ -7,9 +7,9 @@ We would like to start by representing the **density** of the tweets in the diff
 
 Then, we would like to make an analysis of the **sentiment** associated with the tweets and, again, a visualization according to canton/municipality would be provided.
 
-Finally, we would focus on **event detection** and its visualization. By analysing the tweets’ content (including hashtags), we would like to identify patterns in the group behavior during certain events (like concerts, conventions, etc…).
+Finally, we would focus on **event detection** and its visualization. In the end, we would like to have an interactive map (similar to an interactive timeline) highlighting the different events at a given time.
 
-The three maps (density, sentiment and events) share the underlying **visualization framework**, that being the backbone of this project.
+The three maps (density, sentiment and events) share the same underlying **visualization framework**, which is the backbone of this project.
 
 
 ## Data Description
