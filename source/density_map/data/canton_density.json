@@ -1,77 +1,128 @@
 {
   "cantons":[
     {
-      "year":2014,
+      "date":1388530800000,
       "data":[
         {
           "id":21,
-          "canton":"Ticino",
           "nbr":100
         },
         {
           "id":2,
-          "canton":"Bern",
           "nbr":200
         },
         {
           "id":22,
-          "canton":"Vaud",
           "nbr":150
         },
         {
           "id":1,
-          "canton":"Zurich",
           "nbr":500
         }
       ]
     },
     {
-      "year":2015,
+      "date":1420066800000,
       "data":[
         {
           "id":21,
-          "canton":"Ticino",
           "nbr":50
         },
         {
           "id":2,
-          "canton":"Bern",
           "nbr":80
         },
         {
           "id":22,
-          "canton":"Vaud",
           "nbr":300
         },
         {
           "id":1,
-          "canton":"Zurich",
           "nbr":400
         }
       ]
     },
     {
-      "year":2016,
+      "date":1451602800000,
       "data":[
         {
           "id":21,
-          "canton":"Ticino",
           "nbr":90
         },
         {
           "id":2,
-          "canton":"Bern",
           "nbr":280
         },
         {
           "id":22,
-          "canton":"Vaud",
           "nbr":509
         },
         {
           "id":1,
-          "canton":"Zurich",
           "nbr":203
+        }
+      ]
+    },
+    {
+      "date":1454284800000,
+      "data":[
+        {
+          "id":21,
+          "nbr":50
+        },
+        {
+          "id":2,
+          "nbr":80
+        },
+        {
+          "id":22,
+          "nbr":300
+        },
+        {
+          "id":1,
+          "nbr":400
+        }
+      ]
+    },
+    {
+      "date":1456790400000,
+      "data":[
+        {
+          "id":21,
+          "nbr":50
+        },
+        {
+          "id":2,
+          "nbr":80
+        },
+        {
+          "id":22,
+          "nbr":300
+        },
+        {
+          "id":1,
+          "nbr":400
+        }
+      ]
+    },
+    {
+      "date":1459468800000,
+      "data":[
+        {
+          "id":21,
+          "nbr":50
+        },
+        {
+          "id":2,
+          "nbr":80
+        },
+        {
+          "id":22,
+          "nbr":300
+        },
+        {
+          "id":1,
+          "nbr":400
         }
       ]
     }

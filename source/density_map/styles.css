@@ -1,7 +1,12 @@
+#map {
+    height: 580px;
+    width: 960px;
+}
+
 .country {
     fill: none;
     stroke: #000;
-    stroke-width: 1.2;
+    stroke-width: 3;
 }
 
 .cantons {
