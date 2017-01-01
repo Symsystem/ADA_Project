@@ -4,125 +4,203 @@
 
 var SwissMap = function(data) {
 
-    var leafMap = L.map('map').setView([46.79, 8.38], 8);
-    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osm = new L.TileLayer(osmUrl, {});
-    leafMap.addLayer(osm);
+    // ######### PARAMETERS ###########
     // Size of the map in pixels
     var width = 960, height = 580;
-    // Adds the map on the DOM of the html page
-    var svg = d3.select(leafMap.getPanes().overlayPane).append("svg");
-    //.attr("width", width/2)
-    //.attr("height", height/2);
-    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+    // Bounds of the domain
+    var minimum = 0, maximum = 500;
+    // Bounds of the colors
+    var minimumColor = "#fee8c8", maximumColor = "#e34a33";
 
     // MEMBER VARIABLES :
 
-    var dates = data.dates;
-    var country = data.country;
-    var cantons = data.cantons;
-    var municipalities = data.municipalities;
+    var dates = data.dates,
+        country = data.country,
+        cantons = data.cantons,
+        municipalities = data.municipalities;
 
     var currentRange = [dates[0], dates[dates.length-1]];
-    var zoomLevel = "canton";
+    var zoomLevel;
+    var clickTopoListener = new EventListener();
 
-    // Try with no projection for now
-    var transform = d3.geo.transform({point: projectPoint}),
-        path = d3.geo.path().projection(transform);
-    leafMap.on("zoom", resetSVG);
-    resetSVG();
 
-    this.init = function() {
-        this.draw(currentRange[0], currentRange[1]);
+    var leafMap = L.map('map').setView([46.79, 8.38], 8);
+    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osm = new L.TileLayer(osmUrl, {
+        minZoom: 8,
+        maxZoom: 12
+    });
+    leafMap.addLayer(osm);
+
+    var countryLayer = new L.TopoJSON(country, {
+        style: {color: 'black', weight: 3}
+    }).addTo(leafMap);
+    var cantonLayer = new L.TopoJSON(cantons, {
+        style: style,
+        onEachFeature: onEachCanton
+    });
+    var municipalityLayer = new L.TopoJSON(municipalities, {
+        style: style,
+        onEachFeature: onEachMunicipality
+    });
+
+    var info = L.control();
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'nameInfo'); // create a div with a class "nameInfo"
+        this.update();
+        return this._div;
     };
 
-    this.draw = function(range) {
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        this._div.innerHTML = (props ? '<b>' + props.name + '</b>' : 'Hover over an area');
+    };
+    info.addTo(leafMap);
+
+
+    this.addClickListener = function(listener) {
+        clickTopoListener.addListener(listener);
+    };
+
+    this.zoomToFeature = function(e) {
+        leafMap.fitBounds(e.target.getBounds());
+    };
+
+    this.init = function(zoom) {
+        this.drawLegend();
+        this.setZoomLevel(zoom);
+        this.addClickListener(this.zoomToFeature);
+    };
+
+    this.updateRange = function(range) {
         currentRange = [range[0], range[1]];
-        drawCountry(country);
-        if (zoomLevel == "canton") {
-            drawCantons()
+        if (zoomLevel === "municipality") {
+            municipalityLayer.eachLayer(function(layer) {
+                layer.setStyle(style(layer.feature));
+            });
         } else {
-            drawMunicipalities()
+            cantonLayer.eachLayer(function(layer) {
+                layer.setStyle(style(layer.feature));
+            });
         }
     };
 
-    function projectPoint(x, y) {
-        var point = leafMap.latLngToLayerPoint(new L.LatLng(y, x));
-        this.stream.point(point.x, point.y);
-    }
+    this.setZoomLevel = function(zoom) {
+        if (zoom === "municipality") {
+            zoomLevel = "municipality";
+            leafMap.removeLayer(cantonLayer);
+            municipalityLayer.addTo(leafMap);
+        } else {
+            zoomLevel = "canton";
+            leafMap.removeLayer(municipalityLayer);
+            cantonLayer.addTo(leafMap);
+        }
+        this.updateRange(currentRange);
+    };
 
-    function resetSVG() {
-        console.log("test");
-        var bounds = path.bounds(topojson.feature(cantons, cantons.objects.cantons)),
-            topLeft = bounds[0],
-            bottomRight = bounds[1];
-        svg.attr("width", bottomRight[0] - topLeft[0])
-           .attr("height", bottomRight[1] - topLeft[1])
-           .style("left", topLeft[0] + "px")
-           .style("top", topLeft[1] + "px");
-        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-        g.selectAll(".country").attr("d", path);
-        g.selectAll(".cantons").attr("d", path);
-        g.selectAll(".municipalities").attr("d", path);
+    function style(feature) {
+        return {
+            fillColor: getColor(computeData(feature.properties.data)),
+            fillOpacity: 0.7,
+            opacity: 1,
+            color: "#151515",
+            weight: 1
+        };
     }
 
     function getColor(data) {
-        // Bounds for the color domain
-        var minimum = 10, maximum = 500;
-
-        // Create the linear color list
-        var minimumColor = "#fee8c8", maximumColor = "#e34a33";
-        var linearColor = d3.scale.linear().domain([minimum, maximum]).range([minimumColor, maximumColor]);
-        //var logColor = d3.scale.log().domain([minimum, maximum]).range([minimumColor, maximumColor]);
-
+        var linearColor = d3.scaleLinear()
+            .domain([minimum, maximum])
+            .range([minimumColor, maximumColor]);
         return linearColor(data);
     }
 
     function computeData(data) {
         var sum = 0;
-
-        Object.keys(data).map(function(objKey, index) {
-           if (currentRange[0] <= objKey && objKey <= currentRange[1]) {
-               sum += data[objKey];
-           }
+        Object.keys(data).map(function (objKey, index) {
+            if (currentRange[0] <= objKey && objKey <= currentRange[1]) {
+                sum += data[objKey];
+            }
         });
-
+        data["nbr"] = sum;
         return sum;
     }
 
-    function setZoom(more) {
-        if (more) {
-            this.zoomLevel = "municipality";
-        } else {
-            this.zoomLevel = "canton";
+    function onEachCanton(canton, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlightCanton,
+            click: clickTrigger
+        });
+
+        function resetHighlightCanton(e) {
+            cantonLayer.resetStyle(e.target);
+            info.update();
         }
     }
 
-    function drawCountry() {
-        g.selectAll(".country")
-            .data(topojson.feature(country, country.objects.country).features)
-            .enter().append("path")
-            .attr("class", "country") // Give a class for styling later
-            .attr("d", path);
+    function onEachMunicipality(muni, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlightMunicipality,
+            click: clickTrigger
+        });
+
+        function resetHighlightMunicipality(e) {
+            municipalityLayer.resetStyle(e.target);
+            info.update();
+        }
     }
 
-    function drawCantons() {
-        g.selectAll(".cantons")
-            .data(topojson.feature(cantons, cantons.objects.cantons).features)
-            .enter().append("path")
-            .attr("class", "cantons") // Give a class for styling later
-            .attr("id", function (d) {
-                return "id_" + d.properties.id;
-            }, true)
-            .attr("d", path);
+    function highlightFeature(e) {
+        var layer = e.target;
 
-        g.selectAll(".cantons")
-            .style("fill", function (d) {
-                return getColor(computeData(d.properties.data));
-            });
+        layer.setStyle({
+            weight: 2,
+            color: '#ff8f09'
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
     }
 
-    function drawMunicipalities() {
-
+    function clickTrigger(e) {
+        clickTopoListener.trigger(e);
     }
+
+    this.drawLegend = function() {
+        var w = 120, h = 350;
+        var gWidth = w - 100, gHeight = h - 50;
+        var key = d3.select("#legend").append("svg")
+            .attr("width", w)
+            .attr("height", h)
+            .attr("transform", "translate(" + (width + 20) + ", " + (-height) +")");
+
+        var legend = key.append("defs").append("svg:linearGradient")
+            .attr("id", "gradient")
+            .attr("x1", "100%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "100%")
+            .attr("spreadMethod", "pad");
+
+        legend.append("stop").attr("offset", "0%").attr("stop-color", maximumColor).attr("stop-opacity", 1);
+        legend.append("stop").attr("offset", "100%").attr("stop-color", minimumColor).attr("stop-opacity", 1);
+        key.append("rect").attr("width", gWidth).attr("height", gHeight).style("fill", "url(#gradient)").attr("transform", "translate(0,10)");
+
+        var y = d3.scaleLinear().range([h - 50, 0]).domain([minimum, maximum]);
+
+        var yAxis = d3.axisRight().scale(y);
+
+        key.append("g").attr("class", "y axis")
+            .attr("transform", "translate("+ (gWidth) +", 10)")
+            .call(yAxis).append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 30).attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Number of tweets");
+    };
 };
