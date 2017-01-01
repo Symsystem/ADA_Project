@@ -37,12 +37,14 @@ function init() {
 }
 
 function loadData() {
+    var topo = "res/topo/";
+    var density = "res/density/";
     queue()
-        .defer(d3.json, "topo/ch-country.json")
-        .defer(d3.json, "topo/ch-cantons.json")
-        .defer(d3.json, "topo/ch-municipalities.json")
-        .defer(d3.json, "data/canton_density.json")
-        .defer(d3.json, "data/municipality_density.json")
+        .defer(d3.json, topo + "ch-country.json")
+        .defer(d3.json, topo + "ch-cantons.json")
+        .defer(d3.json, topo + "ch-municipalities.json")
+        .defer(d3.json, density + "canton_density.json")
+        .defer(d3.json, density + "municipality_density.json")
         .await(processData);
 }
 

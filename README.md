@@ -1,4 +1,4 @@
-# MOBILITY EVENTS IN SWITZERLAND (SwissFlows)
+# MOBILITY EVENTS IN SWITZERLAND (SwissTweets)
 
 ## Abstract
 The main goal of this project will be to create an interactive and intuitive map (focusing on Switzerland) showing the information extracted from the geolocated tweets.
