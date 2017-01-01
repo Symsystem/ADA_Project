@@ -29,11 +29,7 @@ function main() {
 }
 
 function init() {
-    var btn = document.createElement("BUTTON"),
-        t = document.createTextNode("Change zoom");
-    btn.appendChild(t);
-    document.getElementById("content").appendChild(btn);
-    btn.onclick = changeZoom;
+    document.getElementsByClassName("zoom-level-btn")[0].onclick = changeZoom;
 }
 
 function loadData() {

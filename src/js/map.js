@@ -172,12 +172,20 @@ var SwissMap = function(data) {
     }
 
     this.drawLegend = function() {
-        var w = 120, h = 350;
-        var gWidth = w - 100, gHeight = h - 50;
-        var key = d3.select("#legend").append("svg")
+        var divLegend = L.control({position: 'bottomright'});
+
+        divLegend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'legend');
+            return div;
+        };
+
+        divLegend.addTo(leafMap);
+
+        var w = 50, h = 170;
+        var gWidth = w - 40, gHeight = h - 20;
+        var key = d3.select(".legend").append("svg")
             .attr("width", w)
-            .attr("height", h)
-            .attr("transform", "translate(" + (width + 20) + ", " + (-height) +")");
+            .attr("height", h);
 
         var legend = key.append("defs").append("svg:linearGradient")
             .attr("id", "gradient")
@@ -191,7 +199,7 @@ var SwissMap = function(data) {
         legend.append("stop").attr("offset", "100%").attr("stop-color", minimumColor).attr("stop-opacity", 1);
         key.append("rect").attr("width", gWidth).attr("height", gHeight).style("fill", "url(#gradient)").attr("transform", "translate(0,10)");
 
-        var y = d3.scaleLinear().range([h - 50, 0]).domain([minimum, maximum]);
+        var y = d3.scaleLinear().range([gHeight, 0]).domain([minimum, maximum]);
 
         var yAxis = d3.axisRight().scale(y);
 
