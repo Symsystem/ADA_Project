@@ -9,7 +9,10 @@
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <script src="js/timeline.js"></script>
+    <script src="js/swissMap.js"></script>
+    <script src="js/mapLayer.js"></script>
+    <script src="js/main.js"></script>
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -59,7 +62,6 @@
                                 <button type="button" class="btn btn-default btn-xs zoom-level-btn" aria-expanded="false">
                                     Change precision
                                 </button>
-                                </ul>
                             </div>
                         </div>
                     </div>
@@ -67,9 +69,24 @@
                         <div id="densityMap"></div>
                     </div>
                 </div>
-
-                <div id="timeline"></div>
-                <div id="densityInfos"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-arrows-h fa-fw"></i> Timeline
+                    </div>
+                    <div class="panel-body">
+                        <div id="timeline"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle fa-fw"></i> Information
+                    </div>
+                    <div class="panel-body">
+                        <div id="densityInfos"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -78,9 +95,6 @@
     <div id="event" class="tab-pane fade">
     </div>
 </div>
-<script src="js/timeline.js"></script>
-<script src="js/swissMap.js"></script>
-<script src="js/mapLayer.js"></script>
-<script src="js/main.js"></script>
+<script>Window.onload = SwissTweets.main.init()</script>
 </body>
 </html>

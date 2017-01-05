@@ -1,8 +1,8 @@
 /**
+ * @author Symeon del Marmol
+ *
  * This class represents custom event listener that trigger a list of functions
  * when an event occurs.
- *
- * @Author Symeon del Marmol
  */
 
 function EventListener() {

@@ -13,13 +13,11 @@
  * @param {string} htmlId : It has to be the id of an existing html object.
  * @param {topoJSON} countryTopo : The topoJSON object that contains the borders
  *                                 of Switzerland.
- * @effects Creates a SwissMap contained on the html object with the id 'htmlId'
+ * @constructor Creates a SwissMap contained on the html object with the id 'htmlId'
  *          and uses 'countryTopo' to draw the borders of Switzerland.
  */
-/** @constructor */
 function SwissMap(htmlId, countryTopo) {
 
-    // Initialise the leafmap component
     var swissCoordinates = [46.79, 8.38];
     this.leafMap = L.map(htmlId).setView(swissCoordinates, 8);
     this.leafMap.addLayer(new L.TileLayer(
@@ -36,14 +34,10 @@ function SwissMap(htmlId, countryTopo) {
 
 /**
  * @param {MapLayer} layer
- * @effects Adds the layer to the map. If this is the first layer added,
- *           it displays it by default.
+ * @effects Adds the layer to the map.
  */
 SwissMap.prototype.addLayer = function(layer) {
     this.layers.push(layer);
-    if (this.layers.length === 1) {
-        this.layers[0].addToLeafMap(this.leafMap);
-    }
 };
 
 /**
@@ -88,7 +82,7 @@ SwissMap.prototype.enableLayer = function(layerName) {
 SwissMap.prototype.disableLayer = function(layerName) {
     for (var i = 0; i < this.layers.length; i++) {
         if (this.layers[i].name === layerName) {
-            this.layers[i].removeFromLeafMap(this.leafMap);
+            this.layers[i].removeFromLeafMap();
             break;
         }
     }

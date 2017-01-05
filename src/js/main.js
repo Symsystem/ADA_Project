@@ -7,12 +7,11 @@
 
 var SwissTweets = SwissTweets || {};
 
-var timeline;
-
 SwissTweets.main = {
     init: function() {
         SwissTweets.data.loadData();
-        document.getElementsByClassName("zoom-level-btn")[0].onclick = SwissTweets.graphic.changeDensityLayer;
+        document.getElementsByClassName("zoom-level-btn")[0].onclick =
+            SwissTweets.graphic.changeDensityLayer;
     }
 };
 
@@ -40,57 +39,47 @@ SwissTweets.data = {
 
         SwissTweets.densityCanton = cantonsData;
         SwissTweets.densityMuni = muniData;
-        var initDate = cantonsData.cantons[0].date;
-        SwissTweets.data.updateDensityDates(cantonsData.cantons[0].date, cantonsData.cantons[4].date);
+        SwissTweets.densityDates =
+            cantonsData.cantons.map(function(e) { return e.date; });
 
-        timeLine = new TimeLine(SwissTweets.densityDate);
-        timeLine.addUpdateListener(function(range) {
+        var initRange = [cantonsData.cantons[0].date,
+            cantonsData.cantons[cantonsData.cantons.length-1].date];
+        SwissTweets.data.updateDensityDates(initRange[0], initRange[1]);
+
+        var densityTimeLine = new TimeLine(SwissTweets.densityDates);
+        densityTimeLine.addUpdateListener(function(range) {
             SwissTweets.data.updateDensityDates(range[0], range[1]);
         });
     },
     updateDensityDates: function(start, end) {
-        var c = SwissTweets.densityCanton.cantons;
-        var resCantons = {};
-        for (var i = 0; i < c.length; i++) {
-            if (start <= c[i].date && c[i].date <= end) {
-                for (var j = 0; j < c[i].data.length; j++) {
-                    var data = c[i].data[j];
-                    if (!resCantons[data.id]) {
-                        resCantons[data.id] = 0;
-                    }
-                    resCantons[data.id] += data.nbr;
-                }
-            }
-        }
-        var densityMap = SwissTweets.graphic.obj["densityMap"];
-        densityMap.updateData("cantons", resCantons);
-        densityMap.enableLayer(SwissTweets.data.densityLayer);
+        SwissTweets.densityStart = start;
+        SwissTweets.densityEnd = end;
 
-        var m = SwissTweets.densityMuni.municipalities;
-        var resMuni = {};
-        SwissTweets.densityDate = [];
-        for (var i = 0; i < m.length; i++) {
-            SwissTweets.densityDate.push(m[i].date);
-            if (start <= m[i].date && c[i].date <= end) {
-                for (var j = 0; j < m[i].data.length; j++) {
-                    var data = m[i].data[j];
-                    if (!resMuni[data.id]) {
-                        resMuni[data.id] = 0;
+        var t = (SwissTweets.data.densityLayer === "cantons") ?
+                SwissTweets.densityCanton.cantons :
+                SwissTweets.densityMuni.municipalities;
+        var res = {};
+        for (var i = 0; i < t.length; i++) {
+            if (start <= t[i].date && t[i].date <= end) {
+                for (var j = 0; j < t[i].data.length; j++) {
+                    var data = t[i].data[j];
+                    if (!res[data.id]) {
+                        res[data.id] = 0;
                     }
-                    resMuni[data.id] += data.nbr;
+                    res[data.id] += data.nbr;
                 }
             }
         }
-        densityMap.updateData("municipalities", resMuni);
+        SwissTweets.graphic.obj["densityMap"]
+            .updateData(SwissTweets.data.densityLayer, res);
     },
     clickDensityInfo: function(e) {
         var layer = e.target.options.parent;
-        var content = "<span class='name'>Name : "
+        document.getElementById("densityInfos").innerHTML =
+            "<span class='name'>Name : "
             + e.target.feature.properties.name + "</span><br/>"
             + "<span class='number'>Number : "
             + layer.data[e.target.feature.id] + "</span>";
-
-        document.getElementById("densityInfos").innerHTML = content;
     }
 };
 
@@ -100,29 +89,38 @@ SwissTweets.graphic = {
     initMap: function(error, country, cantons, municipalities) {
 
         var densityMap = new SwissMap("densityMap", country);
+        var fitBoundsRegion = function(e) {
+            densityMap.leafMap.fitBounds(e.target.getBounds());
+        };
+
         var cantonLayer = new TopoLayer("cantons", cantons);
         cantonLayer.addClickListener(SwissTweets.data.clickDensityInfo);
-        densityMap.addLayer(cantonLayer);
+        cantonLayer.addClickListener(fitBoundsRegion);
+
         var muniLayer = new TopoLayer("municipalities", municipalities);
+        muniLayer.addClickListener(SwissTweets.data.clickDensityInfo);
+        muniLayer.addClickListener(fitBoundsRegion);
 
+        densityMap.addLayer(cantonLayer);
         densityMap.addLayer(muniLayer);
-        SwissTweets.graphic.obj["densityMap"] = densityMap;
+        densityMap.enableLayer("cantons");
 
+        SwissTweets.graphic.obj["densityMap"] = densityMap;
         SwissTweets.data.loadDensityData();
     },
 
     changeDensityLayer: function() {
-        var o = SwissTweets.graphic.obj;
+        var map = SwissTweets.graphic.obj["densityMap"];
         if (SwissTweets.data.densityLayer === "cantons") {
-            o["densityMap"].disableLayer("cantons");
-            o["densityMap"].enableLayer("municipalities");
+            map.disableLayer("cantons");
+            map.enableLayer("municipalities");
             SwissTweets.data.densityLayer = "municipalities"
         } else {
-            o["densityMap"].disableLayer("municipalities");
-            o["densityMap"].enableLayer("cantons");
+            map.disableLayer("municipalities");
+            map.enableLayer("cantons");
             SwissTweets.data.densityLayer = "cantons"
         }
+        SwissTweets.data.updateDensityDates(
+            SwissTweets.densityStart, SwissTweets.densityEnd);
     }
 };
-
-Window.onload = SwissTweets.main.init();

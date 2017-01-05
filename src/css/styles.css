@@ -23,23 +23,25 @@
 }
 
 .mainline {
-    fill: #f1dcca;
+    stroke: #000;
+    stroke-width: 1px;
+    shape-rendering: auto;
 }
 
 .selection {
-    stroke: none;
-    fill-opacity: 1;
-    fill: #ff9b54;
+    stroke: #444;
+    stroke-width: 0.5;
+    fill-opacity: .6;
+    fill: #ff7518;
+    shape-rendering: crispEdges;
 }
 
 .handle {
     stroke: none;
-    width: 2px;
-    fill: #444;
-    height: 25px;
+    fill: none;
 }
 
-.nameInfo, [class*="-legend"] {
+.infoBox, [class*="-legend"] {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
@@ -48,12 +50,24 @@
     border-radius: 5px;
 }
 
-.axis text {
+.timeline-axis text {
     font: 10px sans-serif;
 }
 
-.axis line, .axis path {
+.timeline-axis line, .timeline-axis path {
     fill: none;
     stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis--grid .domain {
+    fill: #c5e2f1;
+    stroke: none;
+}
+
+.axis--grid line {
+    fill: none;
+    stroke: #0c3652;
+    stroke-width: 2;
     shape-rendering: crispEdges;
 }

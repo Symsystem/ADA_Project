@@ -1,41 +1,51 @@
 
 function TimeLine(date) {
 
-    var begin = date[0], end = date[date.length - 1];
-    var width = 960, height = 25;
+    var datePad = 1206000000;
+    var begin = date[0] - datePad,
+        end = date[date.length - 1] + datePad;
 
-    var scale = d3.scaleLinear()
+    var margin = {top: 0, right: 20, bottom: 20, left: 20},
+        width = 870 - margin.left - margin.right,
+        height = 45 - margin.top - margin.bottom;
+
+    var scale = d3.scaleTime()
         .domain([begin, end])
-        .range([0, width - 40]);
+        .range([0, width]);
 
     var svg = d3.select("#timeline").append("svg")
-        .attr("width", width + 50)
-        .attr("height", height + 20);
-
-    //brush
-    var brush = d3.brushX()
-        .extent([[0, 0], [width - 40, height]])
-        .on("end", update);
-
-    var mainLine = svg.append("g")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("class", "mainline")
-        .attr("transform", "translate(20, 0)")
-        .call(brush);
-
-    var axis = d3.axisBottom()
-        .scale(scale)
-        .tickValues(date.map(function(current){return new Date(current);}))
-        .tickFormat(d3.timeFormat("%m/%Y"));
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     svg.append('g')
-        .attr("class", "axis")
-        .attr("transform", "translate(20, " + height + ")")
-        .call(axis);
+        .attr("class", "timeline-axis")
+        .attr("transform", "translate(0, " + height + ")")
+        .call(d3.axisBottom()
+            .scale(scale)
+            .ticks(6)
+            .tickFormat(d3.timeFormat("%m/%Y"))
+        );
 
-    mainLine.selectAll(".handle")
-        .attr("transform", "translate(3, 3)");
+    svg.append('g')
+        .attr("class", "timeline-axis axis--grid")
+        .attr("transform", "translate(0, " + height + ")")
+        .call(d3.axisBottom()
+                .scale(scale)
+                .tickSize(-height)
+                .tickValues(date.map(function(current){return new Date(current);}))
+                .tickFormat(function() {return null; })
+        );
+
+    var brush = d3.brushX()
+        .extent([[0, 0], [width, height]])
+        .on("end", update);
+
+    var brushSel = svg.append("g")
+        .attr("class", "mainline")
+        .call(brush);
+    brush.move(brushSel, [scale(date[0]), scale(date[date.length - 1])]);
 
     var updateListeners = [];
 
@@ -51,8 +61,8 @@ function TimeLine(date) {
 
         if (d1[0] >= d1[1]) {
             var oneDay = 86400000; // nb ms in a single day
-            d1[0] = closestDate(d1[0]) - oneDay * 3;
-            d1[1] = closestDate(d1[0]) + oneDay * 3;
+            d1[0] = closestDate(d1[0]) - oneDay * 2;
+            d1[1] = closestDate(d1[0]) + oneDay * 2;
         }
 
         d3.select(this).transition().call(d3.event.target.move, d1.map(scale));
@@ -63,15 +73,15 @@ function TimeLine(date) {
     }
 
     function closestDate(element) {
-        for (var i = 0; i < date.length - 1; i++) {
-            if (date[i] <= element && element <= date[i+1]) {
-                if ((element - date[i]) < (date[i+1] - element)) {
-                    return date[i];
-                } else {
-                    return date[i + 1];
-                }
+        var distance = Math.abs(date[0] - element);
+        var index = 0;
+        for(var c = 1; c < date.length; c++){
+            var cdistance = Math.abs(date[c] - element);
+            if (cdistance < distance) {
+                index = c;
+                distance = cdistance;
             }
         }
-        return date[date.length - 1];
+        return date[index];
     }
 }
