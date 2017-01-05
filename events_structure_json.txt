@@ -1,0 +1,77 @@
+
+######## STRUCTURE ##########
+
+{
+	events: [
+		{
+			date: UNIX_TIME, (first day of the month at midnight, (in milliseconds)) converter : https://currentmillis.com
+			data: [
+			  	{
+			  		name: String,
+					start: UNIX_TIME,
+					end: UNIX_TIME,
+					latitude: float,
+					longitude: float,
+				}
+			]
+		}
+	]
+}
+
+######## EXAMPLE #########
+
+{
+	events: [
+		{
+			date: null,
+			data: [
+				{
+					name: "someEvent",
+					latitude: 46.8095953,
+					longitude: 7.1032042
+				}
+			]
+		},
+		{
+			date: 1451606400000,
+			data: [
+				{
+					name: "concert1",
+					start: 1459468800000,
+					end: 1459468800000,
+					latitude: 46.8095953,
+					longitude: 7.1032042
+				},
+				{
+					name: "festival1",
+					start: 1501545600000,
+					end: 1509494400000,
+					latitude: 46.916639,
+					longitude: 7.438287
+				}
+			]
+		},
+		{
+			date: 1456790400000,
+			data: [
+				{
+					name: "concert2",
+					start: 1458342000000,
+					end: 1458342000000,
+					latitude: 46.8095953,
+					longitude: 7.1032042
+				}
+		},
+		{
+			date: 1459461600000,
+			data: [
+				{
+					name: "festival2",
+					start: 1461880800000,
+					end: 1462140000000,			// Notice that this event finishes the following month. But its place in the list is determined by the moment when it starts.
+					latitude: 46.8095953,
+					longitude: 7.1032042
+				}
+		}
+	]
+}

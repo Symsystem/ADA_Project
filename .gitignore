@@ -6,3 +6,4 @@ spark.txt
 spark-1.6.2-bin-hadoop2.6/*
 yarn
 startbootstrap-sb-admin-2-gh-pages
+*.old.*

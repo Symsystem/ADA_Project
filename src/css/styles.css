@@ -1,6 +1,5 @@
-#map {
+#densityMap {
     height: 580px;
-    width: 100%;
 }
 
 .country {
@@ -40,7 +39,7 @@
     height: 25px;
 }
 
-.nameInfo, .legend {
+.nameInfo, [class*="-legend"] {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
