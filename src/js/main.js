@@ -18,7 +18,7 @@ SwissTweets.main = {
 SwissTweets.data = {
     topo: "res/topo/",
     density: "res/density/",
-
+    events: "res/events/",
     densityLayer: "cantons",
 
     loadData: function() {
@@ -27,7 +27,9 @@ SwissTweets.data = {
             .defer(d3.json, this.topo + "ch-municipalities.json")
             .await(SwissTweets.graphic.initMap);
     },
-
+    /**
+     * ************ DENSITY MAP FUNCTIONS ************
+     */
     loadDensityData: function() {
         queue()
             .defer(d3.json, this.density + "canton_density.json")
@@ -46,8 +48,9 @@ SwissTweets.data = {
             cantonsData.cantons[cantonsData.cantons.length-1].date];
         SwissTweets.data.updateDensityDates(initRange[0], initRange[1]);
 
-        var densityTimeLine = new TimeLine(SwissTweets.densityDates);
-        densityTimeLine.addUpdateListener(function(range) {
+        var timeLine =
+            new TimeLine("densityTimeline", SwissTweets.densityDates);
+        timeLine.addUpdateListener(function(range) {
             SwissTweets.data.updateDensityDates(range[0], range[1]);
         });
     },
@@ -80,6 +83,66 @@ SwissTweets.data = {
             + e.target.feature.properties.name + "</span><br/>"
             + "<span class='number'>Number : "
             + layer.data[e.target.feature.id] + "</span>";
+    },
+    /**
+     * ************ SENTIMENT MAP FUNCTIONS ************
+     */
+
+    /**
+     * ************ EVENT MAP FUNCTIONS ************
+     */
+    loadEventData: function() {
+        queue()
+            .defer(d3.json, this.events + "events.json")
+            .await(this.processEventData);
+    },
+    processEventData: function(error, eventData) {
+        if (error) { throw error; }
+
+        SwissTweets.events = eventData;
+        SwissTweets.eventDates =
+            eventData.events.map(function(e) { return e.date; });
+
+        var initRange = [eventData.events[0].date,
+            eventData.events[eventData.events.length-1].date];
+        SwissTweets.data.updateEventDates(initRange[0], initRange[1]);
+
+        var timeLine = new TimeLine("eventTimeline", SwissTweets.eventDates);
+        timeLine.addUpdateListener(function(range) {
+            SwissTweets.data.updateEventDates(range[0], range[1]);
+        });
+    },
+    updateEventDates: function(start, end) {
+        SwissTweets.eventStart = start;
+        SwissTweets.eventEnd = end;
+
+        var t = SwissTweets.events.events;
+        var res = [];
+        for (var i = 0; i < t.length; i++) {
+            if (start <= t[i].date && t[i].date <= end) {
+                for (var j = 0; j < t[i].data.length; j++) {
+                    var data = t[i].data[j];
+                    res.push(data);
+                }
+            }
+        }
+        SwissTweets.graphic.obj["eventMap"].updateData("events", res);
+    },
+    clickEventInfo: function(e) {
+        var event = e.target.options.data;
+        var start = new Date(event.start),
+            end = new Date(event.end);
+        document.getElementById("eventInfos").innerHTML =
+            "<span class='date'>Starting date : "
+            + start.getDate() + " - "
+            + start.getMonth() + " - "
+            + start.getFullYear() + "</span><br/>"
+            + "<span class='date'>End : "
+            + end.getDate() + " - "
+            + end.getMonth() + " - "
+            + end.getFullYear() + "</span><br/>"
+            + "<span class='keywords'>Keywords : "
+            + event.related_keywords + "</span>";
     }
 };
 
@@ -88,6 +151,7 @@ SwissTweets.graphic = {
 
     initMap: function(error, country, cantons, municipalities) {
 
+        // ******** DENSITY INITIALISE **********
         var densityMap = new SwissMap("densityMap", country);
         var fitBoundsRegion = function(e) {
             densityMap.leafMap.fitBounds(e.target.getBounds());
@@ -107,6 +171,18 @@ SwissTweets.graphic = {
 
         SwissTweets.graphic.obj["densityMap"] = densityMap;
         SwissTweets.data.loadDensityData();
+
+        // ******** EVENT INITIALISE **********
+        var eventMap = new SwissMap("eventMap", country);
+
+        var eventLayer = new MarkerLayer("events");
+        eventLayer.addClickListener(SwissTweets.data.clickEventInfo);
+
+        eventMap.addLayer(eventLayer);
+        eventMap.enableLayer("events");
+
+        SwissTweets.graphic.obj["eventMap"] = eventMap;
+        SwissTweets.data.loadEventData();
     },
 
     changeDensityLayer: function() {

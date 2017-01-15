@@ -1,0 +1,55 @@
+{
+  "events": [
+    {
+      "date": 1451606400000,
+      "data": [
+        {
+          "start": 1459468800000,
+          "end": 1459468800000,
+          "latitude": 46.8095953,
+          "longitude": 7.1032042,
+          "related_keywords": ["concert", "musique", "etudiants"],
+          "related_hashtags": ["#happy", "#expensive", "#Adele"],
+          "tweets": []
+        },
+        {
+          "start": 1501545600000,
+          "end": 1509494400000,
+          "latitude": 46.916639,
+          "longitude": 7.438287,
+          "related_keywords": ["concert", "musique", "etudiants"],
+          "related_hashtags": ["#happy", "#ambiance", "#Rihanna"],
+          "tweets": []
+        }
+      ]
+    },
+    {
+      "date": 1456790400000,
+      "data": [
+        {
+          "start": 1458342000000,
+          "end": 1458342000000,
+          "latitude": 46.8095953,
+          "longitude": 7.1032042,
+          "related_keywords": ["festival", "ateliers", "children", "films"],
+          "related_hashtags": ["#happy", "#expensive", "#scenes"],
+          "tweets": []
+        }
+      ]
+    },
+    {
+      "date": 1459461600000,
+      "data": [
+        {
+          "start": 1461880800000,
+          "end": 1462140000000,
+          "latitude": 46.8095953,
+          "longitude": 7.1032042,
+          "related_keywords": ["festival", "musique", "etudiants"],
+          "related_hashtags": ["#happy", "#expensive", "#Adele"],
+          "tweets": []
+        }
+      ]
+    }
+  ]
+}

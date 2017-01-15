@@ -1,5 +1,5 @@
 
-function TimeLine(date) {
+function TimeLine(htmlId, date) {
 
     var datePad = 1206000000;
     var begin = date[0] - datePad,
@@ -13,7 +13,7 @@ function TimeLine(date) {
         .domain([begin, end])
         .range([0, width]);
 
-    var svg = d3.select("#timeline").append("svg")
+    var svg = d3.select("#" + htmlId).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")

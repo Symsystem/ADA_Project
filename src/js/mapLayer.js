@@ -87,6 +87,7 @@ function TopoLayer(name, topology) {
     this.data = null;
     this.clickListeners = new EventListener();
 
+
     initLegend.call(this);
     initInfoBox.call(this);
 
@@ -303,6 +304,11 @@ TopoLayer.prototype.buildLegend = function() {
  */
 function MarkerLayer(name) {
     MapLayer.call(this, name);
+
+    this.markers = L.layerGroup([]);
+    this.leafLayers = [this.markers];
+    //this.leafLayers = [];
+    this.clickListeners = new EventListener();
 }
 
 /** *****************************************
@@ -317,7 +323,13 @@ MarkerLayer.prototype.constructor = MarkerLayer;
  * @effects
  */
 MarkerLayer.prototype.onEachElement = function(element, layer) {
+    layer.on({
+       click: onClick
+    });
 
+    function onClick(e) {
+        e.clickListeners.trigger(e);
+    }
 };
 
 /**
@@ -325,7 +337,15 @@ MarkerLayer.prototype.onEachElement = function(element, layer) {
  * @effects
  */
 MarkerLayer.prototype.setData = function(data) {
-
+    this.markers.clearLayers();
+    var _this = this;
+    data.forEach(function(element) {
+        var marker = L.marker([element.latitude, element.longitude],
+            {
+                data: element
+            }).on('click', _this.clickListeners.trigger);
+        _this.markers.addLayer(marker);
+    });
 };
 
 /**
@@ -333,5 +353,5 @@ MarkerLayer.prototype.setData = function(data) {
  * @effects
  */
 MarkerLayer.prototype.addClickListener = function(listener) {
-
+    this.clickListeners.addListener(listener);
 };
