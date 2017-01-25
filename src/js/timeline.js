@@ -1,7 +1,9 @@
 /**
- * A Timeline is a graphic object that represents a timeline with graduations on
- * the bottom side. A timeline contains specific dates that are represented
- * inside the line.
+ * @author Symeon del Marmol
+ *
+ * @overview A Timeline is a graphic object that represents a timeline with
+ * graduations on the bottom side.
+ * A timeline contains specific dates that are represented inside the line.
  * The purpose of the object is to select graphically a part of the timeline
  * that includes some of the specific dates.
  *
@@ -12,7 +14,6 @@
  *                      that will be represented in the timeline
  * @constructor Creates a Timeline.
  *
- * @Author Symeon del Marmol
  */
 function TimeLine(htmlId, date) {
 

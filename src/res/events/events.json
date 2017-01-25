@@ -8,7 +8,8 @@
           "date": 1459468800000,
           "latitude": 46.8095953,
           "longitude": 7.1032042,
-          "tweets": ["ceci est un tweets", "ceci en est un autre"]
+          "tweets": ["ceci est un tweets", "ceci en est un autre"],
+          "number_of_tweets": 3.0
         },
         {
           "name": "concert2",

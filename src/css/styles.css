@@ -28,6 +28,10 @@
     shape-rendering: auto;
 }
 
+path.leaflet-interactive {
+    fill-opacity: 0.1;
+}
+
 .selection {
     stroke: #444;
     stroke-width: 0.5;

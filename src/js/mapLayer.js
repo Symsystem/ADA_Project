@@ -1,6 +1,5 @@
 /**
  * @author Symeon del Marmol
- * @author Ines Valentim
  *
  * @overview A LayerMap represents an interactive, multiple layer for a leaflet
  * map. Its purpose is to be added on a SwissMap.
@@ -68,10 +67,11 @@ MapLayer.prototype.removeFromLeafMap = function() {
  *
  * @param {string} name : This is the unique name that identified the layer.
  * @param {topoJSON} topology : The topology used to generate the main layer.
+ * @param {boolean} legend : if false, disable the legend
  * @constructor Creates a TopoLayer that has the id 'name' and display the
  *              topology passed in parameter.
  */
-function TopoLayer(name, topology) {
+function TopoLayer(name, topology, legend) {
     // Super
     MapLayer.call(this, name);
 
@@ -88,7 +88,10 @@ function TopoLayer(name, topology) {
     this.clickListeners = new EventListener();
 
 
-    initLegend.call(this);
+    legend = typeof legend !== 'undefined' ? legend : true;
+    if (legend) {
+        initLegend.call(this);
+    }
     initInfoBox.call(this);
 
     function initLegend() {
@@ -170,7 +173,9 @@ TopoLayer.prototype.onEachElement = function(element, layer) {
  */
 TopoLayer.prototype.addToLeafMap = function(map) {
     MapLayer.prototype.addToLeafMap.call(this, map);
-    this.buildLegend();
+    if (this.legend) {
+        this.buildLegend();
+    }
 };
 
 /**
@@ -209,7 +214,9 @@ TopoLayer.prototype.setData = function(data) {
     this.data = data;
     var arr = Object.keys(data).map(function(key){return data[key];});
     this.maxData = Math.max.apply(null, arr);
-    updateLegend(this.name, this.maxData);
+    if (this.legend) {
+        updateLegend(this.name, this.maxData);
+    }
     var parent = this;
     this.mainLayer.eachLayer(function(layer) {
         layer.setStyle(parent.getStyle(layer.feature));
@@ -235,7 +242,9 @@ MapLayer.prototype.setColors = function(min, max) {
     this.minColor = min;
     this.maxColor = max;
 
-    this.buildLegend();
+    if (this.legend) {
+        this.buildLegend();
+    }
     var parent = this;
     this.mainLayer.eachLayer(function(layer) {
         layer.setStyle(parent.getStyle(layer.feature));

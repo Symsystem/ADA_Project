@@ -1,6 +1,7 @@
 /**
+ * @author Symeon del Marmol
  *
- * The application represented by the object SwissTweets.
+ * @overview The application represented by the object SwissTweets.
  *
  * The main program is divided in 4 parts :
  * -> MAIN : contains the data and the general functions of the program.
@@ -22,7 +23,6 @@
  *                         -> tab.updateDates
  *                            -> loadMap
  *
- * @Author Symeon del Marmol
  */
 
 var SwissTweets = SwissTweets || {};
@@ -57,7 +57,7 @@ SwissTweets.main = {
         SwissTweets.main.topo.country = country;
         SwissTweets.main.topo.cantons = cantons;
         SwissTweets.main.topo.municipalities = muni;
-        SwissTweets.main.loadData("density")
+        SwissTweets.main.loadData("density");
     },
     cleanData: function(tab) {
         if (SwissTweets.main.map != null) {
@@ -272,8 +272,13 @@ SwissTweets.event = {
         var eventLayer = new MarkerLayer("events");
         eventLayer.addClickListener(SwissTweets.event.clickInfo);
 
+        var cantonLayer =
+            new TopoLayer("cantons", SwissTweets.main.topo.cantons, false);
+
         eventMap.addLayer(eventLayer);
+        eventMap.addLayer(cantonLayer);
         eventMap.enableLayer("events");
+        eventMap.enableLayer("cantons");
 
         SwissTweets.main.map = eventMap;
     },
