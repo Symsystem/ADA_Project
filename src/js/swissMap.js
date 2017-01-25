@@ -87,3 +87,19 @@ SwissMap.prototype.disableLayer = function(layerName) {
         }
     }
 };
+
+/**
+ * @effects Destroy the object and free the memory
+ */
+SwissMap.prototype.destroy = function() {
+    this.layers = null;
+    this.leafMap.remove();
+    this.leafMap = null;
+};
+
+/**
+ * @effects Forces the leaflet map to recompute the size and reloading the tiles
+ */
+SwissMap.prototype.refreshSize = function() {
+    this.leafMap.invalidateSize();
+};

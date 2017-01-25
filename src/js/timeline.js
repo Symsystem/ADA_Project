@@ -1,4 +1,19 @@
-
+/**
+ * A Timeline is a graphic object that represents a timeline with graduations on
+ * the bottom side. A timeline contains specific dates that are represented
+ * inside the line.
+ * The purpose of the object is to select graphically a part of the timeline
+ * that includes some of the specific dates.
+ *
+ *
+ * @param {String} htmlId : the id of the html component that will contain
+ *                          the timeline.
+ * @param {List} date : the list of the particular dates (in unix_time format)
+ *                      that will be represented in the timeline
+ * @constructor Creates a Timeline.
+ *
+ * @Author Symeon del Marmol
+ */
 function TimeLine(htmlId, date) {
 
     var datePad = 1206000000;
@@ -49,10 +64,21 @@ function TimeLine(htmlId, date) {
 
     var updateListeners = [];
 
+    /**
+     * @param {function} listener : function that will be executed when the
+     *                              selected period of the timeline will change.
+     * @effects Adds the function 'listener' to the list of the functions
+     *          executed each time the selected period is updated.
+     */
     this.addUpdateListener = function(listener) {
         updateListeners.push(listener);
     };
 
+    /**
+     * Called when the brush is moved by the user.
+     * @effects updates the selected period in function of the position of the
+     *          brush (the area selected by the user on the timeline).
+     */
     function update() {
         if (!d3.event.sourceEvent) return; // Only transition after input.
         if (!d3.event.selection) return; // Ignore empty selections.
@@ -72,6 +98,11 @@ function TimeLine(htmlId, date) {
         });
     }
 
+    /**
+     * @param {date} element : the date from which we want to find the closest
+     *                         date.
+     * @returns the particular date that is the nearest from 'element'.
+     */
     function closestDate(element) {
         var distance = Math.abs(date[0] - element);
         var index = 0;

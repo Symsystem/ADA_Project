@@ -1,0 +1,28 @@
+{
+	"sentiments": [
+		{
+			"date": UNIX-TIME (the first day of the month in milliseconds),
+			"data": [
+				{
+		          "id": int,
+		          "sentiment": float
+		        },
+		        {
+		          "id":2,
+		          "sentiment":200
+		        },
+		        {
+		          "id":22,
+		          "sentiment":150
+		        },
+		        {
+		          "id":1,
+		          "sentiment":500
+		        }
+			]
+		},
+		{
+
+		}
+	]
+}

@@ -1,66 +1,145 @@
 /**
- * Main program
+ *
+ * The application represented by the object SwissTweets.
+ *
+ * The main program is divided in 4 parts :
+ * -> MAIN : contains the data and the general functions of the program.
+ * -> DENSITY, SENTIMENT and EVENT each contains the data and functions related
+ *    and specific to the map, timeline, and information to display
+ *    in the appropriate tab.
+ *
+ * The initializing process follow this workflow :
+ *
+ * main.loading -> main.init -> main.loadData -> density.loadData
+ * then it follows the same workflow as for the tab changing.
+ *
+ * When we click on a new tab, the process is the same for each of the 3 maps :
+ *
+ * main.changeTab -> main.cleanData
+ *                -> main.loadData
+ *                   -> tab.loadData
+ *                      -> tab.processData
+ *                         -> tab.updateDates
+ *                            -> loadMap
  *
  * @Author Symeon del Marmol
- *
  */
 
 var SwissTweets = SwissTweets || {};
 
+/**
+ *
+ * ******* MAIN *********
+ *
+ */
 SwissTweets.main = {
-    init: function() {
-        SwissTweets.data.loadData();
-        document.getElementsByClassName("zoom-level-btn")[0].onclick =
-            SwissTweets.graphic.changeDensityLayer;
+    map : null,
+    timeline : null,
+    data : {},
+    topo: {country: null, cantons: null, municipalities: null},
+    htmlMapIds: {
+        "density": "densityMap",
+        "sentiment": "sentimentMap",
+        "event": "eventMap"},
+    htmlTimelineIds: {
+        "density": "densityTimeline",
+        "sentiment": "sentimentTimeline",
+        "event": "eventTimeline"},
+    loading: function() {
+        queue().defer(d3.json, "res/topo/ch-country.json")
+            .defer(d3.json, "res/topo/ch-cantons.json")
+            .defer(d3.json, "res/topo/ch-municipalities.json")
+            .await(this.init);
+    },
+    init: function(error, country, cantons, muni) {
+        if (error) { alert(error); }
+
+        SwissTweets.main.topo.country = country;
+        SwissTweets.main.topo.cantons = cantons;
+        SwissTweets.main.topo.municipalities = muni;
+        SwissTweets.main.loadData("density")
+    },
+    cleanData: function(tab) {
+        if (SwissTweets.main.map != null) {
+            SwissTweets.main.map.destroy();
+        }
+        SwissTweets.main.map = null;
+        SwissTweets.main.timeline = null;
+        SwissTweets.main.data = {};
+        document.getElementById(
+            SwissTweets.main.htmlMapIds[tab]).innerHTML = "";
+        document.getElementById
+        (SwissTweets.main.htmlTimelineIds[tab]).innerHTML = "";
+    },
+    loadData: function(tab) {
+        var tabDiv = document.getElementById(tab);
+        tabDiv.getElementsByClassName("loader")[0].style.display = "block";
+        tabDiv.getElementsByClassName("loaded")[0].style.display = "none";
+        if (tab == "density") {
+            SwissTweets.density.loadData();
+        } else if (tab == "sentiment") {
+            SwissTweets.sentiment.loadData();
+        } else if (tab == "event") {
+            SwissTweets.event.loadData();
+        }
+    },
+    changeTab: function(tab) {
+        SwissTweets.main.cleanData(tab);
+        SwissTweets.main.loadData(tab);
+    },
+    endLoading: function(tab) {
+        var tabDiv = document.getElementById(tab);
+        tabDiv.getElementsByClassName("loader")[0].style.display = "none";
+        tabDiv.getElementsByClassName("loaded")[0].style.display = "block";
+        SwissTweets.main.map.refreshSize();
     }
 };
 
-SwissTweets.data = {
-    topo: "res/topo/",
-    density: "res/density/",
-    events: "res/events/",
-    densityLayer: "cantons",
-
+/**
+ *
+ * ******* DENSITY *********
+ *
+ */
+SwissTweets.density = {
+    layer: "cantons",
     loadData: function() {
-        queue().defer(d3.json, this.topo + "ch-country.json")
-            .defer(d3.json, this.topo + "ch-cantons.json")
-            .defer(d3.json, this.topo + "ch-municipalities.json")
-            .await(SwissTweets.graphic.initMap);
-    },
-    /**
-     * ************ DENSITY MAP FUNCTIONS ************
-     */
-    loadDensityData: function() {
         queue()
-            .defer(d3.json, this.density + "canton_density.json")
-            .defer(d3.json, this.density + "municipality_density.json")
-            .await(this.processDensityData);
+            .defer(d3.json, "res/density/canton_density.json")
+            .defer(d3.json, "res/density/municipality_density.json")
+            .await(SwissTweets.density.processData);
+
+        document.getElementById("density")
+            .getElementsByClassName("zoom-level-btn")[0].onclick =
+            SwissTweets.density.changeLayer;
     },
-    processDensityData: function(error, cantonsData, muniData) {
+    processData: function(error, cantonsData, muniData) {
         if (error) { throw error; }
 
-        SwissTweets.densityCanton = cantonsData;
-        SwissTweets.densityMuni = muniData;
-        SwissTweets.densityDates =
+        SwissTweets.main.data["cantons"] = cantonsData;
+        SwissTweets.main.data["municipalities"] = muniData;
+        SwissTweets.main.data["dates"] =
             cantonsData.cantons.map(function(e) { return e.date; });
 
         var initRange = [cantonsData.cantons[0].date,
             cantonsData.cantons[cantonsData.cantons.length-1].date];
-        SwissTweets.data.updateDensityDates(initRange[0], initRange[1]);
+        SwissTweets.density.updateDates(initRange[0], initRange[1]);
 
         var timeLine =
-            new TimeLine("densityTimeline", SwissTweets.densityDates);
+            new TimeLine("densityTimeline", SwissTweets.main.data["dates"]);
         timeLine.addUpdateListener(function(range) {
-            SwissTweets.data.updateDensityDates(range[0], range[1]);
+            SwissTweets.density.updateDates(range[0], range[1]);
         });
-    },
-    updateDensityDates: function(start, end) {
-        SwissTweets.densityStart = start;
-        SwissTweets.densityEnd = end;
+        SwissTweets.main.timeline = timeLine;
 
-        var t = (SwissTweets.data.densityLayer === "cantons") ?
-                SwissTweets.densityCanton.cantons :
-                SwissTweets.densityMuni.municipalities;
+        SwissTweets.main.endLoading("density");
+    },
+    updateDates: function(start, end) {
+        SwissTweets.density.start = start;
+        SwissTweets.density.end = end;
+
+        var t = (SwissTweets.density.layer === "cantons") ?
+            SwissTweets.main.data["cantons"].cantons :
+            SwissTweets.main.data["municipalities"].municipalities;
         var res = {};
         for (var i = 0; i < t.length; i++) {
             if (start <= t[i].date && t[i].date <= end) {
@@ -73,10 +152,35 @@ SwissTweets.data = {
                 }
             }
         }
-        SwissTweets.graphic.obj["densityMap"]
-            .updateData(SwissTweets.data.densityLayer, res);
+        if (SwissTweets.main.map == null) {
+            SwissTweets.density.loadMap();
+        }
+        SwissTweets.main.map.updateData(SwissTweets.density.layer, res);
     },
-    clickDensityInfo: function(e) {
+    loadMap: function() {
+        var densityMap =
+            new SwissMap("densityMap", SwissTweets.main.topo.country);
+        var fitBoundsRegion = function(e) {
+            densityMap.leafMap.fitBounds(e.target.getBounds());
+        };
+
+        var cantonLayer =
+            new TopoLayer("cantons", SwissTweets.main.topo.cantons);
+        cantonLayer.addClickListener(SwissTweets.density.clickInfo);
+        cantonLayer.addClickListener(fitBoundsRegion);
+
+        var muniLayer =
+            new TopoLayer("municipalities", SwissTweets.main.topo.municipalities);
+        muniLayer.addClickListener(SwissTweets.density.clickInfo);
+        muniLayer.addClickListener(fitBoundsRegion);
+
+        densityMap.addLayer(cantonLayer);
+        densityMap.addLayer(muniLayer);
+        densityMap.enableLayer("cantons");
+
+        SwissTweets.main.map = densityMap;
+    },
+    clickInfo: function(e) {
         var layer = e.target.options.parent;
         document.getElementById("densityInfos").innerHTML =
             "<span class='name'>Name : "
@@ -84,39 +188,69 @@ SwissTweets.data = {
             + "<span class='number'>Number : "
             + layer.data[e.target.feature.id] + "</span>";
     },
-    /**
-     * ************ SENTIMENT MAP FUNCTIONS ************
-     */
+    changeLayer: function() {
+        var map = SwissTweets.main.map;
+        if (SwissTweets.density.layer === "cantons") {
+            map.disableLayer("cantons");
+            map.enableLayer("municipalities");
+            SwissTweets.density.layer = "municipalities"
+        } else {
+            map.disableLayer("municipalities");
+            map.enableLayer("cantons");
+            SwissTweets.density.layer = "cantons"
+        }
+        SwissTweets.density.updateDates(
+            SwissTweets.density.start, SwissTweets.density.end);
+    }
+};
 
-    /**
-     * ************ EVENT MAP FUNCTIONS ************
-     */
-    loadEventData: function() {
+
+/**
+ *
+ * ******* SENTIMENT *********
+ *
+ */
+SwissTweets.sentiment = {
+
+};
+
+
+/**
+ *
+ * ******* EVENT *********
+ *
+ */
+SwissTweets.event = {
+    loadData: function() {
         queue()
-            .defer(d3.json, this.events + "events.json")
-            .await(this.processEventData);
+            .defer(d3.json, "res/events/events.json")
+            .await(SwissTweets.event.processData);
     },
-    processEventData: function(error, eventData) {
+    processData: function(error, eventData) {
         if (error) { throw error; }
 
-        SwissTweets.events = eventData;
-        SwissTweets.eventDates =
+        SwissTweets.main.data["events"] = eventData;
+        SwissTweets.main.data["dates"] =
             eventData.events.map(function(e) { return e.date; });
 
         var initRange = [eventData.events[0].date,
             eventData.events[eventData.events.length-1].date];
-        SwissTweets.data.updateEventDates(initRange[0], initRange[1]);
+        SwissTweets.event.updateDates(initRange[0], initRange[1]);
 
-        var timeLine = new TimeLine("eventTimeline", SwissTweets.eventDates);
+        var timeLine =
+            new TimeLine("eventTimeline", SwissTweets.main.data["dates"]);
         timeLine.addUpdateListener(function(range) {
-            SwissTweets.data.updateEventDates(range[0], range[1]);
+            SwissTweets.event.updateDates(range[0], range[1]);
         });
-    },
-    updateEventDates: function(start, end) {
-        SwissTweets.eventStart = start;
-        SwissTweets.eventEnd = end;
+        SwissTweets.main.timeline = timeLine;
 
-        var t = SwissTweets.events.events;
+        SwissTweets.main.endLoading("event");
+    },
+    updateDates: function(start, end) {
+        SwissTweets.event.start = start;
+        SwissTweets.event.end = end;
+
+        var t = SwissTweets.main.data["events"].events;
         var res = [];
         for (var i = 0; i < t.length; i++) {
             if (start <= t[i].date && t[i].date <= end) {
@@ -126,77 +260,37 @@ SwissTweets.data = {
                 }
             }
         }
-        SwissTweets.graphic.obj["eventMap"].updateData("events", res);
+
+        if (SwissTweets.main.map == null) {
+            SwissTweets.event.loadMap();
+        }
+        SwissTweets.main.map.updateData("events", res);
     },
-    clickEventInfo: function(e) {
-        var event = e.target.options.data;
-        var start = new Date(event.start),
-            end = new Date(event.end);
-        document.getElementById("eventInfos").innerHTML =
-            "<span class='date'>Starting date : "
-            + start.getDate() + " - "
-            + start.getMonth() + " - "
-            + start.getFullYear() + "</span><br/>"
-            + "<span class='date'>End : "
-            + end.getDate() + " - "
-            + end.getMonth() + " - "
-            + end.getFullYear() + "</span><br/>"
-            + "<span class='keywords'>Keywords : "
-            + event.related_keywords + "</span>";
-    }
-};
-
-SwissTweets.graphic = {
-    obj: {},
-
-    initMap: function(error, country, cantons, municipalities) {
-
-        // ******** DENSITY INITIALISE **********
-        var densityMap = new SwissMap("densityMap", country);
-        var fitBoundsRegion = function(e) {
-            densityMap.leafMap.fitBounds(e.target.getBounds());
-        };
-
-        var cantonLayer = new TopoLayer("cantons", cantons);
-        cantonLayer.addClickListener(SwissTweets.data.clickDensityInfo);
-        cantonLayer.addClickListener(fitBoundsRegion);
-
-        var muniLayer = new TopoLayer("municipalities", municipalities);
-        muniLayer.addClickListener(SwissTweets.data.clickDensityInfo);
-        muniLayer.addClickListener(fitBoundsRegion);
-
-        densityMap.addLayer(cantonLayer);
-        densityMap.addLayer(muniLayer);
-        densityMap.enableLayer("cantons");
-
-        SwissTweets.graphic.obj["densityMap"] = densityMap;
-        SwissTweets.data.loadDensityData();
-
-        // ******** EVENT INITIALISE **********
-        var eventMap = new SwissMap("eventMap", country);
+    loadMap: function() {
+        var eventMap = new SwissMap("eventMap", SwissTweets.main.topo.country);
 
         var eventLayer = new MarkerLayer("events");
-        eventLayer.addClickListener(SwissTweets.data.clickEventInfo);
+        eventLayer.addClickListener(SwissTweets.event.clickInfo);
 
         eventMap.addLayer(eventLayer);
         eventMap.enableLayer("events");
 
-        SwissTweets.graphic.obj["eventMap"] = eventMap;
-        SwissTweets.data.loadEventData();
+        SwissTweets.main.map = eventMap;
     },
-
-    changeDensityLayer: function() {
-        var map = SwissTweets.graphic.obj["densityMap"];
-        if (SwissTweets.data.densityLayer === "cantons") {
-            map.disableLayer("cantons");
-            map.enableLayer("municipalities");
-            SwissTweets.data.densityLayer = "municipalities"
-        } else {
-            map.disableLayer("municipalities");
-            map.enableLayer("cantons");
-            SwissTweets.data.densityLayer = "cantons"
+    clickInfo: function(e) {
+        var event = e.target.options.data;
+        var date = new Date(event.date);
+        var tweets = "";
+        for (var i = 0; i < event.tweets.length; i++) {
+            tweets += event.tweets[i] + "<br/>";
         }
-        SwissTweets.data.updateDensityDates(
-            SwissTweets.densityStart, SwissTweets.densityEnd);
+        document.getElementById("eventInfos").innerHTML =
+            "<span class='name'>Name : " + event.name + "</span><br/>"
+            + "<span class='date'>Date : "
+            + date.getDate() + " - "
+            + date.getMonth() + " - "
+            + date.getFullYear() + "</span><br/>"
+            + "<span class='keywords'>Tweets concerned :<br/>"
+            + tweets + "</span>";
     }
 };

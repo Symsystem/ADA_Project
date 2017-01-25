@@ -197,7 +197,7 @@ TopoLayer.prototype.getStyle = function(element) {
 };
 
 /**
- * @param {list} data : The data that the main layer represents graphically.
+ * @param {List} data : The data that the main layer represents graphically.
  *               The accepted format is a list of objects composed by :
  *               { id : Int, nbr : Int }
  *               such that : - the value of id is the id of a region
@@ -299,13 +299,14 @@ TopoLayer.prototype.buildLegend = function() {
  */
 
 /**
- * @param {String} name : ...
- * @constructor ...
+ * @param {String} name : This is the unique name that identified the layer.
+ * @constructor Creates a MarkerLayer that has the id 'name' with an empty
+ *              set of markers.
  */
 function MarkerLayer(name) {
     MapLayer.call(this, name);
 
-    this.markers = L.layerGroup([]);
+    this.markers = L.markerClusterGroup();
     this.leafLayers = [this.markers];
     //this.leafLayers = [];
     this.clickListeners = new EventListener();
@@ -318,9 +319,9 @@ MarkerLayer.prototype = Object.create(MapLayer.prototype);
 MarkerLayer.prototype.constructor = MarkerLayer;
 
 /**
- * @param element
- * @param layer
- * @effects
+ * @override
+ * @param {Marker} element : the marker on which the event happened
+ * @param {leafletLayer} layer : The leaflet layer 'element' is part of.
  */
 MarkerLayer.prototype.onEachElement = function(element, layer) {
     layer.on({
@@ -333,8 +334,10 @@ MarkerLayer.prototype.onEachElement = function(element, layer) {
 };
 
 /**
- * @param data
- * @effects
+ * @param {List} data : The markers that the layer represents graphically.
+ *               The expected format is a list of objects composed by :
+ *               {latitude : float, longitude : float}
+ * @effects Sets the data that the layer represents and updates the layers.
  */
 MarkerLayer.prototype.setData = function(data) {
     this.markers.clearLayers();
@@ -349,8 +352,10 @@ MarkerLayer.prototype.setData = function(data) {
 };
 
 /**
- * @param listener
- * @effects
+ * @param {function} listener : The function to execute when a click occurs
+ *                              on a marker of the layer.
+ * @effects Adds the listener to the functions that are executed on each click
+ *          on a marker of the layer.
  */
 MarkerLayer.prototype.addClickListener = function(listener) {
     this.clickListeners.addListener(listener);
