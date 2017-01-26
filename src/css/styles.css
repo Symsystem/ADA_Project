@@ -28,7 +28,7 @@
     shape-rendering: auto;
 }
 
-path.leaflet-interactive {
+#event path.leaflet-interactive {
     fill-opacity: 0.1;
 }
 
