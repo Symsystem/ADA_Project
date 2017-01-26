@@ -211,7 +211,109 @@ SwissTweets.density = {
  *
  */
 SwissTweets.sentiment = {
+    layer: "cantons",
+    loadData: function() {
+        queue()
+            .defer(d3.json, "res/sentiment/canton_sentiment.json")
+            .defer(d3.json, "res/sentiment/municipality_sentiment.json")
+            .await(SwissTweets.sentiment.processData);
 
+        document.getElementById("sentiment")
+            .getElementsByClassName("zoom-level-btn")[0].onclick =
+            SwissTweets.sentiment.changeLayer;
+    },
+    processData: function(error, cantonsData, muniData) {
+        if (error) { throw error; }
+
+        SwissTweets.main.data["cantons"] = cantonsData;
+        SwissTweets.main.data["municipalities"] = muniData;
+        SwissTweets.main.data["dates"] =
+            cantonsData.cantons.map(function(e) { return e.date; });
+
+        var initRange = [cantonsData.cantons[0].date,
+            cantonsData.cantons[cantonsData.cantons.length-1].date];
+        SwissTweets.sentiment.updateDates(initRange[0], initRange[1]);
+
+        var timeLine =
+            new TimeLine("sentimentTimeline", SwissTweets.main.data["dates"]);
+        timeLine.addUpdateListener(function(range) {
+            SwissTweets.sentiment.updateDates(range[0], range[1]);
+        });
+        SwissTweets.main.timeline = timeLine;
+
+        SwissTweets.main.endLoading("sentiment");
+    },
+    updateDates: function(start, end) {
+        SwissTweets.sentiment.start = start;
+        SwissTweets.sentiment.end = end;
+
+        var t = (SwissTweets.sentiment.layer === "cantons") ?
+            SwissTweets.main.data["cantons"].cantons :
+            SwissTweets.main.data["municipalities"].municipalities;
+        var res = {};
+        for (var i = 0; i < t.length; i++) {
+            if (start <= t[i].date && t[i].date <= end) {
+                for (var j = 0; j < t[i].data.length; j++) {
+                    var data = t[i].data[j];
+                    if (!res[data.id]) {
+                        res[data.id] = 0;
+                    }
+                    res[data.id] += data.nbr;
+                }
+            }
+        }
+        if (SwissTweets.main.map == null) {
+            SwissTweets.sentiment.loadMap();
+        }
+        SwissTweets.main.map.updateData(SwissTweets.sentiment.layer, res);
+    },
+    loadMap: function() {
+        var densityMap =
+            new SwissMap("sentimentMap", SwissTweets.main.topo.country);
+        var fitBoundsRegion = function(e) {
+            densityMap.leafMap.fitBounds(e.target.getBounds());
+        };
+
+        var cantonLayer =
+            new TopoLayer("cantons", SwissTweets.main.topo.cantons);
+        cantonLayer.setColors("#e34a33", "#2AB23B");
+        cantonLayer.addClickListener(SwissTweets.sentiment.clickInfo);
+        cantonLayer.addClickListener(fitBoundsRegion);
+
+        var muniLayer =
+            new TopoLayer("municipalities", SwissTweets.main.topo.municipalities);
+        muniLayer.setColors("#e34a33", "#2AB23B");
+        muniLayer.addClickListener(SwissTweets.sentiment.clickInfo);
+        muniLayer.addClickListener(fitBoundsRegion);
+
+        densityMap.addLayer(cantonLayer);
+        densityMap.addLayer(muniLayer);
+        densityMap.enableLayer("cantons");
+
+        SwissTweets.main.map = densityMap;
+    },
+    clickInfo: function(e) {
+        var layer = e.target.options.parent;
+        document.getElementById("sentimentInfos").innerHTML =
+            "<span class='name'>Name : "
+            + e.target.feature.properties.name + "</span><br/>"
+            + "<span class='number'>Sentiment (-1 = bad ; +1 = good): "
+            + layer.data[e.target.feature.id] + "</span>";
+    },
+    changeLayer: function() {
+        var map = SwissTweets.main.map;
+        if (SwissTweets.sentiment.layer === "cantons") {
+            map.disableLayer("cantons");
+            map.enableLayer("municipalities");
+            SwissTweets.sentiment.layer = "municipalities"
+        } else {
+            map.disableLayer("municipalities");
+            map.enableLayer("cantons");
+            SwissTweets.sentiment.layer = "cantons"
+        }
+        SwissTweets.sentiment.updateDates(
+            SwissTweets.sentiment.start, SwissTweets.sentiment.end);
+    }
 };
 
 

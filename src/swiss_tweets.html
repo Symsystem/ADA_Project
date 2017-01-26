@@ -12,10 +12,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="js/leaflet.markercluster.js"></script>
-    <script src="js/timeline.js"></script>
-    <script src="js/swissMap.js"></script>
-    <script src="js/mapLayer.js"></script>
-    <script src="js/main.js"></script>
+
+    <!-- SwissTweets application -->
+    <script src="js/swisstweets.min.js"></script>
+
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -60,7 +60,7 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="fa fa-map fa-fw"></i> Switzerland with density of tweets
+                        <i class="fa fa-map fa-fw"></i> Density of tweets in Switzerland
                         <div class="pull-right">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-xs zoom-level-btn" aria-expanded="false">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="panel-body" style="padding: 0;">
-                        <div id="densityMap"></div>
+                        <div id="densityMap" class="map"></div>
                     </div>
                 </div>
             </div>
@@ -99,6 +99,51 @@
         </div>
     </div>
     <div id="sentiment" class="tab-pane">
+        <div class="row">
+            <div class="col-lg-12"><h2 class="page-header">Sentiment map</h2></div>
+        </div>
+        <div class="loader"></div>
+        <div class="row loaded">
+            <div class="col-lg-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-map fa-fw"></i> Switzerland with general sentiment by region, based on tweets
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs zoom-level-btn" aria-expanded="false">
+                                    Change precision
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <div id="sentimentMap" class="map"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="infos col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle fa-fw"></i> Information
+                    </div>
+                    <div class="panel-body">
+                        <div id="sentimentInfos"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-arrows-h fa-fw"></i> Timeline
+                    </div>
+                    <div class="panel-body">
+                        <div id="sentimentTimeline"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="event" class="tab-pane">
         <div class="row">
@@ -109,10 +154,10 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="fa fa-map fa-fw"></i> Events in Switzerland
+                        <i class="fa fa-map fa-fw"></i> Events in Switzerland, based on tweets
                     </div>
                     <div class="panel-body" style="padding: 0;">
-                        <div id="eventMap"></div>
+                        <div id="eventMap" class="map"></div>
                     </div>
                 </div>
                 <div class="panel panel-default">
