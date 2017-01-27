@@ -12,8 +12,14 @@ Finally, we would focus on **event detection** and its visualization. In the end
 The three maps (density, sentiment and events) share the same underlying **visualization framework**, which is the backbone of this project.
 
 
+## Results
+By the end of the project, we were able to achieve what we proposed to do: a webapp showing different aspects related to geolocated tweets. The webapp can be acessed here: https://symsystem.github.io/ADA_Project/src/swiss_tweets.html.
+
+There are three main tabs: density map, sentiments map and events map. All the pre-processing, manipulation and generation of the JSON files where done by us, except for the data related to the events map (for which we teamed up with another team).
+
+
 ## Data Description
-The dataset consists of geolocated tweets in the Swiss area during four years.
+The dataset consists of geolocated tweets in the Swiss area during seven years (from 2010 to 2016).
 We will focus our attention in some particular fields of the tweets:
 - **id**, the integer representation of the unique identifier for the tweet;
 - **coordinates**, which represents the geographic location of the tweet as reported by the user;
