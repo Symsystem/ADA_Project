@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 from geopy.geocoders import Nominatim
 import csv
+from langdetect import DetectorFactory
+from langdetect import detect
+from langdetect.lang_detect_exception import LangDetectException
+import csv
 
 ''' delete all the columns except :
 Name of the collumn      Number
@@ -62,3 +66,32 @@ def get_total_canton(data):
 
 def get_total_municipality(data):
     return data.groupby(['canton', 'town']).size().rename('tweets')
+
+
+def clean_data(data, columns_to_clean_na, columns_to_keep):
+    for col in columns_to_clean_na:
+        data = data[data[col] != r'\N']
+    return data[columns_to_keep]
+
+
+def add_language(language, df) :
+    DetectorFactory.seed = 100
+
+    df.dropna(inplace=True,subset = ['content'])
+    error = 0
+    list = []
+    compteur = 0
+    for sample in df['content'] :
+        compteur +=1
+        try:
+            list.append(detect(sample))
+
+        except (RuntimeError, TypeError, NameError,LangDetectException) :
+            error +=1
+            list.append('NaN')
+
+    df['language']= list
+    print("number of errors :",error)
+    print("file size : ",df[df['language'] == language].shape )
+    return df[df['language'] == language]
+
