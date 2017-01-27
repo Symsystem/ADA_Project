@@ -24,8 +24,6 @@
 
     <!-- Custom Fonts -->
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <script src="js/utils.js"></script>
     <meta charset="UTF-8">
     <title>Swiss Tweets</title>
 </head>
@@ -74,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-4" style="height: 100%">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i> Information
@@ -85,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row loaded">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -132,7 +130,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row loaded">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -160,14 +158,6 @@
                         <div id="eventMap" class="map"></div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-arrows-h fa-fw"></i> Timeline
-                    </div>
-                    <div class="panel-body">
-                        <div id="eventTimeline"></div>
-                    </div>
-                </div>
             </div>
             <div class="col-lg-4">
                 <div class="panel panel-default">
@@ -176,6 +166,18 @@
                     </div>
                     <div class="panel-body">
                         <div id="eventInfos"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row loaded">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-arrows-h fa-fw"></i> Timeline
+                    </div>
+                    <div class="panel-body">
+                        <div id="eventTimeline"></div>
                     </div>
                 </div>
             </div>

@@ -12,10 +12,12 @@
  *                          the timeline.
  * @param {List} date : the list of the particular dates (in unix_time format)
  *                      that will be represented in the timeline
+ * @param {Array} selectedPeriod : An array that contains the beginning and
+ *                                 ending initial dates selected on the timeline
  * @constructor Creates a Timeline.
  *
  */
-function TimeLine(htmlId, date) {
+function TimeLine(htmlId, date, selectedPeriod) {
 
     var datePad = 1206000000;
     var begin = date[0] - datePad,
@@ -61,7 +63,7 @@ function TimeLine(htmlId, date) {
     var brushSel = svg.append("g")
         .attr("class", "mainline")
         .call(brush);
-    brush.move(brushSel, [scale(date[0]), scale(date[date.length - 1])]);
+    brush.move(brushSel, [scale(selectedPeriod[0]), scale(selectedPeriod[1])]);
 
     var updateListeners = [];
 

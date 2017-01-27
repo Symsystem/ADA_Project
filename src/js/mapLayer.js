@@ -185,7 +185,7 @@ TopoLayer.prototype.addToLeafMap = function(map) {
  */
 TopoLayer.prototype.getStyle = function(element) {
     var linearColor = d3.scaleLinear()
-        .domain([0, this.maxData])
+        .domain([this.minData, this.maxData])
         .range([this.minColor, this.maxColor]);
     var color = linearColor(
         (this.data != null && this.data[element.properties.id]) ?
@@ -208,22 +208,23 @@ TopoLayer.prototype.getStyle = function(element) {
  *               such that : - the value of id is the id of a region
  *                           - the value of nbr is the value associated
  *                             to this region.
+ *
  * @effects Sets the data that the main layer represents and updates the layers.
  */
 TopoLayer.prototype.setData = function(data) {
     this.data = data;
-    var arr = Object.keys(data).map(function(key){return data[key];});
-    this.maxData = Math.max.apply(null, arr);
+    this.maxData = data["max"];
+    this.minData = data["min"];
     if (this.legend) {
-        updateLegend(this.name, this.maxData);
+        updateLegend(this.name, this.minData, this.maxData);
     }
     var parent = this;
     this.mainLayer.eachLayer(function(layer) {
         layer.setStyle(parent.getStyle(layer.feature));
     });
 
-    function updateLegend(name, max) {
-        var y = d3.scaleLinear().range([150, 0]).domain([0, max]);
+    function updateLegend(name, min, max) {
+        var y = d3.scaleLinear().range([150, 0]).domain([min, max]);
         var yAxis = d3.axisRight().scale(y);
         d3.selectAll("." + name + "-axis")
             .call(yAxis).append("text")
@@ -242,9 +243,6 @@ MapLayer.prototype.setColors = function(min, max) {
     this.minColor = min;
     this.maxColor = max;
 
-    if (this.legend) {
-        this.buildLegend();
-    }
     var parent = this;
     this.mainLayer.eachLayer(function(layer) {
         layer.setStyle(parent.getStyle(layer.feature));
@@ -287,7 +285,8 @@ TopoLayer.prototype.buildLegend = function() {
     key.append("rect").attr("width", gWidth).attr("height", gHeight)
         .style("fill", "url(#gradient)").attr("transform", "translate(0,10)");
 
-    var y = d3.scaleLinear().range([gHeight, 0]).domain([0, this.maxData]);
+    var y = d3.scaleLinear().range([gHeight, 0])
+        .domain([this.minData, this.maxData]);
     var yAxis = d3.axisRight().scale(y);
     key.append("g").attr("class", "y axis " + this.name + "-axis")
         .attr("transform", "translate("+ (gWidth) +", 10)")
@@ -295,7 +294,6 @@ TopoLayer.prototype.buildLegend = function() {
         .attr("transform", "rotate(-90)")
         .attr("y", 30).attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Number of tweets");
 };
 
 
@@ -317,7 +315,6 @@ function MarkerLayer(name) {
 
     this.markers = L.markerClusterGroup();
     this.leafLayers = [this.markers];
-    //this.leafLayers = [];
     this.clickListeners = new EventListener();
 }
 
