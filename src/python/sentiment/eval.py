@@ -14,14 +14,14 @@ import csv
 # Data Parameters
 from src.python.sentiment import data_helpers
 from src.python.sentiment.data_helpers import clean_str
-from src.python.sentiment.function import get_datas, add_language
+from src.python.function import get_datas, add_language
 
 tf.flags.DEFINE_string("positive_data_file", "./data/rt-polaritydata/rt-polarity.pos", "Data source for the positive data.")
 tf.flags.DEFINE_string("negative_data_file", "./data/rt-polaritydata/rt-polarity.neg", "Data source for the positive data.")
 
 # Eval Parameters
 tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
-tf.flags.DEFINE_string("checkpoint_dir", "runs/1485514377/checkpoints", "Checkpoint directory from training run")
+tf.flags.DEFINE_string("checkpoint_dir", "runs/1485528145/checkpoints", "Checkpoint directory from training run")
 tf.flags.DEFINE_boolean("eval_train", True, "Evaluate on all training data")
 
 # Misc Parameters

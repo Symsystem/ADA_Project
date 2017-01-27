@@ -29,18 +29,24 @@ def get_datas(path, columns, nbrRows=None):
     for name in columns:
         index_columns.append(map_columns.index(name))
 
-    # df_data = pd.read_csv(path, delimiter=r'\t', nrows=70, encoding='utf-8', quoting=csv.QUOTE_NONE)[index_columns]
     df_data = pd.read_csv(path, sep=r'\t', encoding='utf-8', escapechar='\\', quoting=csv.QUOTE_NONE, header=None,
-                          na_values=r'\N', nrows=nbrRows, engine='python')[index_columns]
+                              na_values=r'\N', nrows=nbrRows, engine='python' )[index_columns]
     df_data.columns = columns
+        #skiprows=range(0,3400)
     return df_data
 
 
 def clean_data(data, columns_to_clean_na, columns_to_keep):
     #for col in columns_to_clean_na:
     #    data = data[data[col] != r'\N']
-    data = data[columns_to_keep]
-    data.dropna(subset=columns_to_clean_na, inplace=True)
+
+    try:
+        data = data[columns_to_keep]
+        data.dropna(subset=columns_to_clean_na, inplace=True)
+
+    except (RuntimeError, TypeError,ValueError, NameError, LangDetectException):
+        pass
+
     return data
 
 

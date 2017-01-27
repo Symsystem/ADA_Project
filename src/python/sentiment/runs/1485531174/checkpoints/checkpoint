@@ -1,0 +1,6 @@
+model_checkpoint_path: "/Users/pierrecolombo/Documents/Cours EPFL/Cours semestre 1/ADA/ADA_Project/src/python/sentiment/runs/1485531174/checkpoints/model-800"
+all_model_checkpoint_paths: "/Users/pierrecolombo/Documents/Cours EPFL/Cours semestre 1/ADA/ADA_Project/src/python/sentiment/runs/1485531174/checkpoints/model-400"
+all_model_checkpoint_paths: "/Users/pierrecolombo/Documents/Cours EPFL/Cours semestre 1/ADA/ADA_Project/src/python/sentiment/runs/1485531174/checkpoints/model-500"
+all_model_checkpoint_paths: "/Users/pierrecolombo/Documents/Cours EPFL/Cours semestre 1/ADA/ADA_Project/src/python/sentiment/runs/1485531174/checkpoints/model-600"
+all_model_checkpoint_paths: "/Users/pierrecolombo/Documents/Cours EPFL/Cours semestre 1/ADA/ADA_Project/src/python/sentiment/runs/1485531174/checkpoints/model-700"
+all_model_checkpoint_paths: "/Users/pierrecolombo/Documents/Cours EPFL/Cours semestre 1/ADA/ADA_Project/src/python/sentiment/runs/1485531174/checkpoints/model-800"
