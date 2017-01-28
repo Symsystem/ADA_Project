@@ -148,6 +148,7 @@ SwissTweets.density = {
                 cantonsData.cantons[cantonsData.cantons.length-1].date;
         }
         SwissTweets.density.maxValSlider = new LogSlider(0, 1);
+        $('#densitySlider').attr("value", 50);
         SwissTweets.density.updateDates(SwissTweets.start, SwissTweets.end);
 
         var timeLine = new TimeLine("densityTimeline",
@@ -185,7 +186,7 @@ SwissTweets.density = {
             min = Math.min.apply(null, arr),
             max = Math.max.apply(null, arr);
         SwissTweets.density.maxValSlider.setBounds(min == 0 ? 1 : min, max);
-        $('#maxValueDensity').html("Maximum : " + max);
+        $('#maxValueDensity').html("Maximum tweets : " + max);
         res["min"] = 0; res["max"] = max;
 
         if (SwissTweets.main.map == null) {
@@ -214,13 +215,13 @@ SwissTweets.density = {
         densityMap.addLayer(muniLayer);
         densityMap.enableLayer(SwissTweets.density.layer);
 
+        SwissTweets.main.map = densityMap;
+
         $('#densitySlider').on('change', function() {
             var val = SwissTweets.density.maxValSlider.value(+$(this).val());
-            $('#maxValueDensity').html("Maximum : " + val.toFixed(0));
-            densityMap.setActualMaxValue(SwissTweets.density.layer, val);
+            $('#maxValueDensity').html("Maximum tweets : " + val.toFixed(0));
+            SwissTweets.main.map.setActualMaxValue(SwissTweets.density.layer, val);
         });
-
-        SwissTweets.main.map = densityMap;
     },
     clickInfo: function(e) {
         var layer = e.target.options.parent;
