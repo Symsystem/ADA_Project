@@ -61,6 +61,19 @@ SwissMap.prototype.updateData = function(layerName, data) {
     }
 };
 
+SwissMap.prototype.setActualMaxValue = function(layerName, max) {
+    var layer;
+    for (var i = 0; i < this.layers.length; i++) {
+        if (layerName === this.layers[i].name) {
+            layer = this.layers[i];
+            break;
+        }
+    }
+    if (layer && layer instanceof TopoLayer) {
+        layer.setActualMaxValue(max);
+    }
+};
+
 /**
  * @param {string} layerName
  * @effects Enables and displays the layer identified by 'layerName'.

@@ -83,7 +83,7 @@ function TopoLayer(name, topology, legend) {
     this.leafLayers.push(this.mainLayer);
 
     this.minColor = "#fee8c8";
-    this.maxColor = "#e34a33";
+    this.maxColor = "#e33814";
     this.data = null;
     this.clickListeners = new EventListener();
 
@@ -185,12 +185,22 @@ TopoLayer.prototype.addToLeafMap = function(map) {
  */
 TopoLayer.prototype.getStyle = function(element) {
     var linearColor = d3.scaleLinear()
-        .domain([this.minData, this.maxData])
+        .domain([this.minData, this.actualMaxValue])
         .range([this.minColor, this.maxColor]);
-    var color = linearColor(
-        (this.data != null && this.data[element.properties.id]) ?
-            this.data[element.properties.id] :
-            0);
+
+    var color;
+    if (this.data != null && this.data[element.properties.id]) {
+        var val = this.data[element.properties.id];
+        if (val > this.actualMaxValue) {
+            color = linearColor(this.actualMaxValue);
+        } else if (val < this.minData) {
+            color = linearColor(this.minData);
+        } else {
+            color = linearColor(val);
+        }
+    } else {
+        color = "#b0b0b0";
+    }
 
     return {
         fillColor: color,
@@ -214,14 +224,22 @@ TopoLayer.prototype.getStyle = function(element) {
 TopoLayer.prototype.setData = function(data) {
     this.data = data;
     this.maxData = data["max"];
+    this.actualMaxValue = this.maxData;
     this.minData = data["min"];
-    if (this.legend) {
-        updateLegend(this.name, this.minData, this.maxData);
-    }
+
+    this.setActualMaxValue(this.actualMaxValue);
+};
+
+TopoLayer.prototype.setActualMaxValue = function(max) {
+    this.actualMaxValue = max;
+
     var parent = this;
     this.mainLayer.eachLayer(function(layer) {
         layer.setStyle(parent.getStyle(layer.feature));
     });
+    if (this.legend) {
+        updateLegend(this.name, this.minData, max);
+    }
 
     function updateLegend(name, min, max) {
         var y = d3.scaleLinear().range([150, 0]).domain([min, max]);
@@ -264,8 +282,8 @@ TopoLayer.prototype.addClickListener = function(listener) {
  *          the leaflet layer control created for this purpose.
  */
 TopoLayer.prototype.buildLegend = function() {
-    var w = 60, h = 170;
-    var gWidth = w - 50, gHeight = h - 20;
+    var w = 75, h = 170;
+    var gWidth = 10, gHeight = h - 20;
     var key = d3.select("." + this.name + "-legend").append("svg")
         .attr("width", w)
         .attr("height", h);

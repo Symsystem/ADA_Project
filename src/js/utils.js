@@ -40,3 +40,28 @@ L.TopoJSON = L.GeoJSON.extend({
         }
     }
 });
+
+function LogSlider(min, max) {
+    this.minpos = 0;
+    this.maxpos = 50;
+    this.minlval = Math.log(min);
+    this.maxlval = Math.log(max);
+
+    this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos);
+}
+
+LogSlider.prototype = {
+    setBounds: function(min, max) {
+        this.minlval = Math.log(min);
+        this.maxlval =  Math.log(max);
+        this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos);
+    },
+    // Calculate value from a slider position
+    value: function(position) {
+        return Math.exp((position - this.minpos) * this.scale + this.minlval);
+    },
+    // Calculate slider position from a value
+    position: function(value) {
+        return this.minpos + (Math.log(value) - this.minlval) / this.scale;
+    }
+};

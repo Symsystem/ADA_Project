@@ -13,7 +13,7 @@ The three maps (density, sentiment and events) share the same underlying **visua
 
 
 ## Results
-By the end of the project, we were able to achieve what we proposed to do: a webapp showing different aspects related to geolocated tweets. The webapp can be acessed here: https://symsystem.github.io/ADA_Project/src/swiss_tweets.html.
+By the end of the project, we were able to achieve what we proposed to do: a webapp showing different aspects related to geolocated tweets. The webapp can be acessed here: https://symsystem.github.io/ADA_Project/.
 
 There are three main tabs: density map, sentiments map and events map. All the pre-processing, manipulation and generation of the JSON files where done by us, except for the data related to the events map (for which we teamed up with another team).
 

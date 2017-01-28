@@ -23,8 +23,8 @@ function TimeLine(htmlId, date, selectedPeriod) {
     var begin = date[0] - datePad,
         end = date[date.length - 1] + datePad;
 
-    var margin = {top: 0, right: 20, bottom: 20, left: 20},
-        width = 870 - margin.left - margin.right,
+    var margin = {top: 0, right: 20, bottom: 20, left: 0},
+        width = 1370 - margin.left - margin.right,
         height = 45 - margin.top - margin.bottom;
 
     var scale = d3.scaleTime()
@@ -42,7 +42,7 @@ function TimeLine(htmlId, date, selectedPeriod) {
         .attr("transform", "translate(0, " + height + ")")
         .call(d3.axisBottom()
             .scale(scale)
-            .ticks(6)
+            .ticks(14)
             .tickFormat(d3.timeFormat("%m/%Y"))
         );
 

@@ -45,6 +45,7 @@ SwissTweets.main = {
         "density": "densityTimeline",
         "sentiment": "sentimentTimeline",
         "event": "eventTimeline"},
+    currentTab: "density",
     loading: function() {
         queue().defer(d3.json, "res/topo/ch-country.json")
             .defer(d3.json, "res/topo/ch-cantons.json")
@@ -59,25 +60,27 @@ SwissTweets.main = {
         SwissTweets.main.topo.municipalities = muni;
         SwissTweets.main.loadData("density");
     },
-    cleanData: function(tab) {
+    cleanData: function() {
         if (SwissTweets.main.map != null) {
             SwissTweets.main.map.destroy();
         }
         SwissTweets.main.map = null;
         SwissTweets.main.timeline = null;
         SwissTweets.main.data = {};
+        var tab = SwissTweets.main.currentTab;
         document.getElementById(
             SwissTweets.main.htmlMapIds[tab]).innerHTML = "";
         document.getElementById
         (SwissTweets.main.htmlTimelineIds[tab]).innerHTML = "";
     },
     loadData: function(tab) {
-        var tabDiv = document.getElementById(tab);
-        tabDiv.getElementsByClassName("loader")[0].style.display = "block";
-        var loaded = tabDiv.getElementsByClassName("loaded");
-        for (var i = 0; i < loaded.length; i++) {
-            loaded[i].style.display = "none";
+        var prevTabDiv = document.getElementById(SwissTweets.main.currentTab);
+        var prevloaded = prevTabDiv.getElementsByClassName("loaded");
+        for (var i = 0; i < prevloaded.length; i++) {
+            prevloaded[i].style.display = "none";
         }
+        prevTabDiv.getElementsByClassName("loader")[0].style.display = "block";
+
         if (tab == "density") {
             SwissTweets.density.loadData();
         } else if (tab == "sentiment") {
@@ -87,7 +90,7 @@ SwissTweets.main = {
         }
     },
     changeTab: function(tab) {
-        SwissTweets.main.cleanData(tab);
+        SwissTweets.main.cleanData();
         SwissTweets.main.loadData(tab);
     },
     endLoading: function(tab) {
@@ -98,6 +101,19 @@ SwissTweets.main = {
             loaded[i].style.display = "block";
         }
         SwissTweets.main.map.refreshSize();
+        SwissTweets.main.selectedPeriodInfo(SwissTweets.start, SwissTweets.end);
+    },
+    selectedPeriodInfo: function(start, end) {
+        var divs = document.getElementsByClassName("periodSelected"),
+            s = new Date(start);
+        var content = (s.getMonth()+1) + "/" + s.getFullYear();
+        if (start != end) {
+            var e = new Date(end);
+            content += " - " + (e.getMonth()+1) + "/" + e.getFullYear();
+        }
+        for (var i = 0; i < divs.length; i++) {
+            divs[i].innerHTML = content;
+        }
     }
 };
 
@@ -131,13 +147,16 @@ SwissTweets.density = {
             SwissTweets.end =
                 cantonsData.cantons[cantonsData.cantons.length-1].date;
         }
+        SwissTweets.density.maxValSlider = new LogSlider(0, 1);
         SwissTweets.density.updateDates(SwissTweets.start, SwissTweets.end);
 
         var timeLine = new TimeLine("densityTimeline",
             SwissTweets.main.data["dates"],
             [SwissTweets.start, SwissTweets.end]);
+
         timeLine.addUpdateListener(function(range) {
             SwissTweets.density.updateDates(range[0], range[1]);
+            SwissTweets.main.selectedPeriodInfo(range[0], range[1]);
         });
         SwissTweets.main.timeline = timeLine;
 
@@ -162,11 +181,16 @@ SwissTweets.density = {
                 }
             }
         }
+        var arr = Object.keys(res).map(function(key){return res[key];}),
+            min = Math.min.apply(null, arr),
+            max = Math.max.apply(null, arr);
+        SwissTweets.density.maxValSlider.setBounds(min == 0 ? 1 : min, max);
+        $('#maxValueDensity').html("Maximum : " + max);
+        res["min"] = 0; res["max"] = max;
+
         if (SwissTweets.main.map == null) {
             SwissTweets.density.loadMap();
         }
-        var arr = Object.keys(res).map(function(key){return res[key];});
-        res["min"] = 0; res["max"] = Math.max.apply(null, arr);
         SwissTweets.main.map.updateData(SwissTweets.density.layer, res);
     },
     loadMap: function() {
@@ -188,7 +212,13 @@ SwissTweets.density = {
 
         densityMap.addLayer(cantonLayer);
         densityMap.addLayer(muniLayer);
-        densityMap.enableLayer("cantons");
+        densityMap.enableLayer(SwissTweets.density.layer);
+
+        $('#densitySlider').on('change', function() {
+            var val = SwissTweets.density.maxValSlider.value(+$(this).val());
+            $('#maxValueDensity').html("Maximum : " + val.toFixed(0));
+            densityMap.setActualMaxValue(SwissTweets.density.layer, val);
+        });
 
         SwissTweets.main.map = densityMap;
     },
@@ -253,6 +283,7 @@ SwissTweets.sentiment = {
                 [SwissTweets.start, SwissTweets.end]);
         timeLine.addUpdateListener(function(range) {
             SwissTweets.sentiment.updateDates(range[0], range[1]);
+            SwissTweets.main.selectedPeriodInfo(range[0], range[1]);
         });
         SwissTweets.main.timeline = timeLine;
 
@@ -283,7 +314,7 @@ SwissTweets.sentiment = {
         if (SwissTweets.main.map == null) {
             SwissTweets.sentiment.loadMap();
         }
-        res["min"] = -1; res["max"] = 1;
+        res["min"] = 0; res["max"] = 1;
         SwissTweets.main.map.updateData(SwissTweets.sentiment.layer, res);
     },
     loadMap: function() {
@@ -307,7 +338,7 @@ SwissTweets.sentiment = {
 
         densityMap.addLayer(cantonLayer);
         densityMap.addLayer(muniLayer);
-        densityMap.enableLayer("cantons");
+        densityMap.enableLayer(SwissTweets.sentiment.layer);
 
         SwissTweets.main.map = densityMap;
     },
@@ -363,8 +394,10 @@ SwissTweets.event = {
         var timeLine = new TimeLine("eventTimeline",
             SwissTweets.main.data["dates"],
             [SwissTweets.start, SwissTweets.end]);
+
         timeLine.addUpdateListener(function(range) {
             SwissTweets.event.updateDates(range[0], range[1]);
+            SwissTweets.main.selectedPeriodInfo(range[0], range[1]);
         });
         SwissTweets.main.timeline = timeLine;
 
