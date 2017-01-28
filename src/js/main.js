@@ -81,6 +81,7 @@ SwissTweets.main = {
         }
         prevTabDiv.getElementsByClassName("loader")[0].style.display = "block";
 
+        SwissTweets.main.currentTab = tab;
         if (tab == "density") {
             SwissTweets.density.loadData();
         } else if (tab == "sentiment") {
