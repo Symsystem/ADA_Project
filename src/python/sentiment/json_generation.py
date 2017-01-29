@@ -47,33 +47,36 @@ def create_json_file(canton_municipality, grouped_dataframe, output_filename):
 path_canton = '../../../twitter-swisscom/Final_Data/Canton/'
 
 path_city = '../../../twitter-swisscom/Final_Data/Town/'
-df_canton = pd.DataFrame(columns=['unix_time', 'town_id', 'c'])
-df_town = pd.DataFrame(columns=['unix_time', 'town_id', 'c'])
-print(df_canton)
+# df_canton = pd.DataFrame(columns=['unix_time', 'town_id', 'c'])
+# df_town = pd.DataFrame(columns=['unix_time', 'town_id', 'c'])
+# print(df_canton)
+#
+# for filename in os.listdir(path_canton):
+#     try :
+#     # Grouping by localtion
+#         df_data = pd.read_csv(path_canton+filename,names=['unix_time', 'town_id', 'c'], sep=r',', encoding='utf-8', escapechar='\\', header=0,
+#                               na_values=r'\N', engine='python')
+#         #print(df_data)
+#         #print("df_data ------ shape :",df_data.shape)
+#         df_canton = df_data.append(df_canton, ignore_index=True)
+#
+#         #print("df_canton ------ shape ",df_canton.shape)
+#
+#     except (TypeError) :
+#         print('Error')
+#
+#
+# for filename in os.listdir(path_city):
+#     df_data = pd.read_csv(path_city+filename, sep=r',',names=['unix_time', 'town_id', 'c'], encoding='utf-8', escapechar='\\', header=0,
+#                               na_values=r'\N', engine='python')
+#     df_town =df_town.append( df_data, ignore_index=True)
 
-for filename in os.listdir(path_canton):
-    try :
-    # Grouping by localtion
-        df_data = pd.read_csv(path_canton+filename,names=['unix_time', 'town_id', 'c'], sep=r',', encoding='utf-8', escapechar='\\', header=0,
+df_data_canton = pd.read_csv('canton',names=['unix_time', 'town_id', 'c'], sep=r',', encoding='utf-8', escapechar='\\', header=0,
                               na_values=r'\N', engine='python')
-        #print(df_data)
-        #print("df_data ------ shape :",df_data.shape)
-        df_canton = df_data.append(df_canton, ignore_index=True)
-
-        #print("df_canton ------ shape ",df_canton.shape)
-
-    except (TypeError) :
-        print('Error')
-
-
-for filename in os.listdir(path_city):
-    df_data = pd.read_csv(path_city+filename, sep=r',',names=['unix_time', 'town_id', 'c'], encoding='utf-8', escapechar='\\', header=0,
+df_data_town = pd.read_csv('town',names=['unix_time', 'town_id', 'c'], sep=r',', encoding='utf-8', escapechar='\\', header=0,
                               na_values=r'\N', engine='python')
-    df_town =df_town.append( df_data, ignore_index=True)
-
-
-grouped_year_canton = df_canton.groupby(['unix_time', 'town_id'])['c'].mean()
-grouped_year_town = df_town.groupby(['unix_time', 'town_id'])['c'].mean()
+grouped_year_canton = df_data_canton.groupby(['unix_time', 'town_id'])['c'].mean()
+grouped_year_town = df_data_town.groupby(['unix_time', 'town_id'])['c'].mean()
 
 #grouped_year_canton.to_csv('canton')
 
