@@ -36,7 +36,8 @@ def create_json_file(canton_municipality, grouped_dataframe, output_filename):
              try :
                 json_file[main_object][date_index]['data'][id_index]['nbr'] = grouped_dataframe[(dates_list[date_index],ids_list[id_index])]
              except (KeyError):
-                 json_file[main_object][date_index]['data'][id_index]['nbr'] = 0
+                 pass
+                 #json_file[main_object][date_index]['data'][id_index]['nbr'] = 0
 
     with open(output_filename, 'w') as file:
          json.dump(json_file, file)
