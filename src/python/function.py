@@ -30,7 +30,7 @@ def get_datas(path, columns, nbrRows=None):
         index_columns.append(map_columns.index(name))
 
     df_data = pd.read_csv(path, sep=r'\t', encoding='utf-8', escapechar='\\', quoting=csv.QUOTE_NONE, header=None,
-                              na_values=r'\N', nrows=nbrRows, engine='python' )[index_columns]
+                              na_values=r'\N', nrows=nbrRows, engine='python')[index_columns]
     df_data.columns = columns
         #skiprows=range(0,3400)
     return df_data
@@ -80,6 +80,9 @@ def clean_data(data, columns_to_clean_na, columns_to_keep):
     return data[columns_to_keep]
 
 
+
+#to slow we need spark to use it
+
 def add_language(language, df) :
     DetectorFactory.seed = 100
 
@@ -97,7 +100,5 @@ def add_language(language, df) :
             list.append('NaN')
 
     df['language']= list
-    print("number of errors :",error)
-    print("file size : ",df[df['language'] == language].shape )
     return df[df['language'] == language]
 

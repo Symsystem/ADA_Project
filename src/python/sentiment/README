@@ -1,0 +1,26 @@
+A special thanks to Kim Yoon’s code for the structure of the CNN
+
+This folder is dedicated to the Machine Learning Algorithm for the sentiment analysis part.
+
+- data contains
+    - rt_polaritydata : the data used to train the convulitionnal neural network
+    - stropwords : list of stopwords in 3 languages (german, italian, french main languages in our tweets) used to filter
+    and extract all tweets
+
+- runs contains :
+    - the points corresponding to the last run of our CNN, and the model
+
+- data_helpers.py : usefull functions to clean the datas
+
+- text_cnn.py : strutuce of the CNN we have deployed
+
+- train.py : script to train the CNN
+
+- eval.py : script to predict on the dataset the sentiment
+
+- preprocessing_data.py : fast script to filter the tweets and only take thoses that are in english
+
+- json_preparation-py & json_generation : scripts to generate the JSON File for the map
+
+
+NOTE : we have split the database of tweets into small file of 2 MB during all the process
