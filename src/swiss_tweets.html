@@ -34,7 +34,7 @@
 <body>
 <div class="navbar navbar-default navbar-static-top" style="margin-bottom: 0">
     <div class="navbar-header">
-        <a class="navbar-brand" href="swiss_tweets.html">Swiss Tweets v1.0</a>
+        <a class="navbar-brand" href="swiss_tweets.html"><i class="fa fa-twitter fa-fw"></i> Swiss Tweets v1.0</a>
     </div>
     <div class="navbar-default sidebar" role="navigation" style="width: 175px;">
         <div class="sidebar-nav navbar-collapse">
@@ -48,6 +48,9 @@
                 <li><a data-toggle="tab" href="#event" onclick=SwissTweets.main.changeTab('event')>
                     <i class="fa fa-map-pin fa-fw"></i> Events map
                 </a></li>
+                <li><a data-toggle="tab" href="#about">
+                    <i class="fa fa-commenting fa-fw"></i> About
+                </a></li>
             </ul>
         </div>
     </div>
@@ -60,7 +63,7 @@
         <div class="loader"></div>
         <div class="row loaded">
             <div class="col-lg-8">
-                <div class="panel panel-default">
+                <div class="panel panel-green">
                     <div class="panel-heading">
                         <div style="float:left;">
                             <i class="fa fa-map fa-fw"></i> Density of tweets in Switzerland
@@ -79,7 +82,7 @@
                 </div>
             </div>
             <div class="col-lg-4" style="height: 100%">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i> Information
                     </div>
@@ -91,7 +94,7 @@
         </div>
         <div class="row loaded">
             <div class="col-lg-12">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="titleTimeLine">
                             <i class="fa fa-arrows-h fa-fw"></i> Timeline
@@ -113,7 +116,7 @@
         <div class="loader"></div>
         <div class="row loaded">
             <div class="col-lg-8">
-                <div class="panel panel-default">
+                <div class="panel panel-green">
                     <div class="panel-heading">
                         <i class="fa fa-map fa-fw"></i> Switzerland with general sentiment by region, based on tweets
                         <div class="pull-right">
@@ -130,7 +133,7 @@
                 </div>
             </div>
             <div class="infos col-lg-4">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i> Information
                     </div>
@@ -142,7 +145,7 @@
         </div>
         <div class="row loaded">
             <div class="col-lg-12">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="titleTimeLine">
                             <i class="fa fa-arrows-h fa-fw"></i> Timeline
@@ -163,7 +166,7 @@
         <div class="loader"></div>
         <div class="row loaded">
             <div class="col-lg-8">
-                <div class="panel panel-default">
+                <div class="panel panel-green">
                     <div class="panel-heading">
                         <i class="fa fa-map fa-fw"></i> Events in Switzerland, based on tweets
                     </div>
@@ -173,7 +176,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i> Information
                     </div>
@@ -185,7 +188,7 @@
         </div>
         <div class="row loaded">
             <div class="col-lg-12">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="titleTimeLine">
                             <i class="fa fa-arrows-h fa-fw"></i> Timeline
@@ -194,6 +197,92 @@
                     </div>
                     <div class="panel-body">
                         <div id="eventTimeline"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="about" class="tab-pane">
+        <div class="row">
+            <div class="col-lg-12"><h2 class="page-header">About the project</h2></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-code fa-fw"></i> Description of the project
+                    </div>
+                    <div class="panel-body">
+                        <p>The main goal of this project was to create an <b>interactive and intuitive</b> visualization tool showing multiple information gathered from <b>geolocated tweets</b> (focus on Switzerland).</p>
+                        <p>The user can switch between three maps: the <b>density</b> map, the <b>sentiments</b> map and the <b>events</b> map.
+                            <ul>
+                                <li>The first one shows the distribution of tweets per canton/municipality in Switzerland.</li>
+                                <li>The second shows the average sentiment associated with the tweets from each canton/municipality.</li>
+                                <li>The third one shows the distribution of detected events from the tweets.</li>
+                            </ul>
+                        </p>
+                        <p>The user can change the range of dates concerning the displayed data by adjusting the width of the orange bar and/or by horizontally dragging it.</p>
+                        <p>This project was supervised by <i>Professor Michele Catasta</i> for the course of Applied Data Analysis (ADA) from the Master in Computer Science program from EPFL (Switzerland). It is an <b>open source project</b> so you can find the git repository by clicking <a href="https://github.com/Symsystem/ADA_Project">here</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-database fa-fw"></i> About the data
+                    </div>
+                    <div class="panel-body">
+                        <p>The dataset used consists of a compilation of tweets provided by Swisscom, from 2010 to 2016, geolocated in Switzerland.</p>
+                        <p>The pre-processing steps can be found in the GitHub repository.</p>
+                        <p>The main fields used for the project were:</p>
+                        <ul>
+                            <li>
+                                <i>id</i> – the integer representation of the unique identifier for the tweet
+                            </li>
+                            <li>
+                                <i>createdAt</i> – the UTC time when the tweet was created (timestamp in the format 0000-00-00 00:00:00)
+                            </li>
+                            <li>
+                                <i>text</i> – the actual UTF-8 text of the status update
+                            </li>
+                            <li>
+                                <i>placeLongitude</i> – the longitude of the place the tweet is associated to
+                            </li>
+                            <li>
+                                <i>placeLatitude</i> – the latitude of the place the tweet is associated to
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-graduation-cap fa-fw"></i> About us
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-lg-4">
+                            <div class="well">
+                                <h4>Inês Valentim</h4>
+                                <p>Portuguese Exchange Student from the University of Coimbra attending the Master in Computer Science at EPFL for one Semester.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="well">
+                                <h4>Syméon del Marmol</h4>
+                                <p>Belgian student currently doing his Master degree in Computer Science at EPFL.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="well" style="height: 100%">
+                                <h4>Pierre Colombo</h4>
+                                <p>French student currently doing his Master degree in Computer Science at EPFL.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
