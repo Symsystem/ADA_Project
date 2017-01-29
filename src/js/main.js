@@ -187,7 +187,7 @@ SwissTweets.density = {
             min = Math.min.apply(null, arr),
             max = Math.max.apply(null, arr);
         SwissTweets.density.maxValSlider.setBounds(min == 0 ? 1 : min, max);
-        $('#maxValueDensity').html("Maximum tweets : " + max);
+        $('#maxValueDensity').html("Max color: " + max + " tweets");
         res["min"] = 0; res["max"] = max;
 
         if (SwissTweets.main.map == null) {
@@ -220,16 +220,16 @@ SwissTweets.density = {
 
         $('#densitySlider').on('change', function() {
             var val = SwissTweets.density.maxValSlider.value(+$(this).val());
-            $('#maxValueDensity').html("Maximum tweets : " + val.toFixed(0));
+            $('#maxValueDensity').html("Max color: " + val.toFixed(0) + " tweets");
             SwissTweets.main.map.setActualMaxValue(SwissTweets.density.layer, val);
         });
     },
     clickInfo: function(e) {
         var layer = e.target.options.parent;
         document.getElementById("densityInfos").innerHTML =
-            "<span class='name'>Name : "
+            "<span class='name'>Name: "
             + e.target.feature.properties.name + "</span><br/>"
-            + "<span class='number'>Number : "
+            + "<span class='number'>Number of tweets: "
             + layer.data[e.target.feature.id] + "</span>";
     },
     changeLayer: function() {
@@ -316,7 +316,7 @@ SwissTweets.sentiment = {
         if (SwissTweets.main.map == null) {
             SwissTweets.sentiment.loadMap();
         }
-        res["min"] = 0; res["max"] = 1;
+        res["min"] = -1; res["max"] = 1;
         SwissTweets.main.map.updateData(SwissTweets.sentiment.layer, res);
     },
     loadMap: function() {
@@ -347,10 +347,11 @@ SwissTweets.sentiment = {
     clickInfo: function(e) {
         var layer = e.target.options.parent;
         document.getElementById("sentimentInfos").innerHTML =
-            "<span class='name'>Name : "
+            "<span class='name'>Name: "
             + e.target.feature.properties.name + "</span><br/>"
-            + "<span class='number'>Sentiment (-1 = bad ; +1 = good): "
-            + layer.data[e.target.feature.id] + "</span>";
+            + "<span class='number'>Sentiment: "
+            + layer.data[e.target.feature.id].toFixed(2)
+            + " <i>(-1 = bad, +1 = good)</i></span>";
     },
     changeLayer: function() {
         var map = SwissTweets.main.map;
@@ -446,15 +447,18 @@ SwissTweets.event = {
         var date = new Date(event.date);
         var tweets = "";
         for (var i = 0; i < event.tweets.length; i++) {
-            tweets += event.tweets[i] + "<br/>";
+            tweets += "<li>" + event.tweets[i] + "</li>";
         }
         document.getElementById("eventInfos").innerHTML =
-            "<span class='name'>Name : " + event.name + "</span><br/>"
-            + "<span class='date'>Date : "
-            + date.getDate() + " - "
-            + date.getMonth() + " - "
+            "<p><span class='name'>Name: " + event.name + "</span><br/>"
+            + "<span class='date'>Date: "
+            + date.getDate() + "/"
+            + date.getMonth() + "/"
             + date.getFullYear() + "</span><br/>"
-            + "<span class='keywords'>Tweets concerned :<br/>"
-            + tweets + "</span>";
+            + "<span class='date'>Number of tweets: "
+            + event.number_of_tweets + "</span></p>"
+            + "<div class='panel panel-default'><div class='panel-heading'>"
+            + "<i class='fa fa-twitter fa-fw'></i> List of tweets</div>"
+            + "<div class='panel-body'><ul>" + tweets + "</ul></div></div>";
     }
 };
