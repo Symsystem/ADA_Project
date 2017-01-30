@@ -107,10 +107,14 @@ SwissTweets.main = {
     selectedPeriodInfo: function(start, end) {
         var divs = document.getElementsByClassName("periodSelected"),
             s = new Date(start);
-        var content = (s.getMonth()+1) + "/" + s.getFullYear();
+        s.setMonth(s.getMonth() + 1);
+        var content = (s.toLocaleString("en-gb", {month: 'long'}))
+            + " " + s.getFullYear();
         if (start != end) {
             var e = new Date(end);
-            content += " - " + (e.getMonth()+1) + "/" + e.getFullYear();
+            e.setMonth(e.getMonth() + 1);
+            content += " - " + (e.toLocaleString("en-gb", {month: 'long'}))
+                + " " + e.getFullYear();
         }
         for (var i = 0; i < divs.length; i++) {
             divs[i].innerHTML = content;
@@ -432,7 +436,7 @@ SwissTweets.event = {
         }, 20);
     },
     loadMap: function() {
-        var eventMap = new SwissMap("eventMap", SwissTweets.main.topo.country);
+        var eventMap = new SwissMap("eventMap", SwissTweets.main.topo.country, 15);
 
         var eventLayer = new MarkerLayer("events");
         eventLayer.addClickListener(SwissTweets.event.clickInfo);
@@ -454,11 +458,12 @@ SwissTweets.event = {
         for (var i = 0; i < event.tweets.length; i++) {
             tweets += "<li>" + event.tweets[i] + "</li>";
         }
+        var locale = "en-gb";
         document.getElementById("eventInfos").innerHTML =
             "<p><span class='name'>Name: " + event.name + "</span><br/>"
             + "<span class='date'>Date: "
-            + date.getDate() + "/"
-            + date.getMonth() + "/"
+            + date.getDate() + " "
+            + date.toLocaleString(locale, {month: "short"}) + " "
             + date.getFullYear() + "</span><br/>"
             + "<span class='date'>Number of tweets: "
             + event.number_of_tweets + "</span></p>"

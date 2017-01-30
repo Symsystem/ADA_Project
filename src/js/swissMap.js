@@ -13,17 +13,18 @@
  * @param {string} htmlId : It has to be the id of an existing html object.
  * @param {topoJSON} countryTopo : The topoJSON object that contains the borders
  *                                 of Switzerland.
+ * @param {int} maxZ : The max level of zoom the the map authorizes
  * @constructor Creates a SwissMap contained on the html object with the id 'htmlId'
  *          and uses 'countryTopo' to draw the borders of Switzerland.
  */
-function SwissMap(htmlId, countryTopo) {
+function SwissMap(htmlId, countryTopo, maxZ) {
 
     var swissCoordinates = [46.79, 8.38];
     this.leafMap = L.map(htmlId).setView(swissCoordinates, 8);
     this.leafMap.addLayer(new L.TileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         minZoom: 8,
-        maxZoom: 12
+        maxZoom: maxZ || 12
     }));
     this.leafMap.addLayer(new L.TopoJSON(countryTopo, {
         style: {color: 'black', weight: 3, fill: "none"}
