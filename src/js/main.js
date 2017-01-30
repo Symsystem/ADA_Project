@@ -143,9 +143,10 @@ SwissTweets.density = {
         SwissTweets.main.data["dates"] =
             cantonsData.cantons.map(function(e) { return e.date; });
 
-        SwissTweets.start = cantonsData.cantons[0].date;
-        SwissTweets.end =
-            cantonsData.cantons[cantonsData.cantons.length-1].date;
+        var nbrDates = cantonsData.events.length;
+        SwissTweets.start =
+            cantonsData.events[nbrDates - Math.floor(nbrDates/4)].date;
+        SwissTweets.end = cantonsData.events[nbrDates-1].date;
 
         SwissTweets.density.maxValSlider = new LogSlider(0, 1);
         $('#densitySlider').attr("value", 50);
@@ -272,9 +273,10 @@ SwissTweets.sentiment = {
         SwissTweets.main.data["dates"] =
             cantonsData.cantons.map(function(e) { return e.date; });
 
-        SwissTweets.start = cantonsData.cantons[0].date;
-        SwissTweets.end =
-            cantonsData.cantons[cantonsData.cantons.length-1].date;
+        var nbrDates = cantonsData.events.length;
+        SwissTweets.start =
+            cantonsData.events[nbrDates - Math.floor(nbrDates/4)].date;
+        SwissTweets.end = cantonsData.events[nbrDates-1].date;
 
         SwissTweets.sentiment.updateDates(SwissTweets.start, SwissTweets.end);
 
@@ -385,9 +387,10 @@ SwissTweets.event = {
         SwissTweets.main.data["dates"] =
             eventData.events.map(function(e) { return e.date; });
 
-        SwissTweets.start = eventData.events[0].date;
-        SwissTweets.end =
-            eventData.events[eventData.events.length-1].date;
+        var nbrDates = eventData.events.length;
+        SwissTweets.start =
+            eventData.events[nbrDates - Math.floor(nbrDates/4)].date;
+        SwissTweets.end = eventData.events[nbrDates-1].date;
 
         SwissTweets.event.updateDates(SwissTweets.start, SwissTweets.end);
 
