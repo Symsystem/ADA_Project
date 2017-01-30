@@ -404,7 +404,7 @@ SwissTweets.event = {
         SwissTweets.main.endLoading("event");
     },
     updateDates: function(start, end) {
-        $("#event-mini-loader").css("display", "block");
+        $("#event-mini-loader").show();
         SwissTweets.start = start;
         SwissTweets.end = end;
 
@@ -423,7 +423,7 @@ SwissTweets.event = {
             SwissTweets.event.loadMap();
         }
         SwissTweets.main.map.updateData("events", res);
-        $("#event-mini-loader").css("display", "none");
+        $("#event-mini-loader").hide();
     },
     loadMap: function() {
         var eventMap = new SwissMap("eventMap", SwissTweets.main.topo.country);

@@ -117,7 +117,7 @@ body {
     animation: spin 2s linear infinite;
 }
 
-.mini-loader {
+#event-mini-loader {
     left: 50%;
     top: 50%;
     z-index: 1;
