@@ -422,8 +422,11 @@ SwissTweets.event = {
         if (SwissTweets.main.map == null) {
             SwissTweets.event.loadMap();
         }
-        SwissTweets.main.map.updateData("events", res);
-        $("#event-mini-loader").hide();
+
+        setTimeout(function(){
+            SwissTweets.main.map.updateData("events", res);
+            $("#event-mini-loader").hide();
+        }, 20);
     },
     loadMap: function() {
         var eventMap = new SwissMap("eventMap", SwissTweets.main.topo.country);
