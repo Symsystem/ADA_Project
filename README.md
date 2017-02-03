@@ -1,7 +1,7 @@
 # MOBILITY EVENTS IN SWITZERLAND (SwissTweets)
 
-## Watch the map :
-https://symsystem.github.io/ADA_Project/
+## Web application :
+**Available here:** https://symsystem.github.io/ADA_Project/
 
 ## Abstract
 The main goal of this project will be to create an interactive and intuitive map (focusing on Switzerland) showing the information extracted from the geolocated tweets.
@@ -16,9 +16,17 @@ The three maps (density, sentiment and events) share the same underlying **visua
 
 
 ## Results
-By the end of the project, we were able to achieve what we proposed to do: a webapp showing different aspects related to geolocated tweets. The webapp can be acessed here: https://symsystem.github.io/ADA_Project/.
+By the end of the project, we were able to achieve what we proposed to do: a webapp showing different aspects related to geolocated tweets. The webapp can be acessed following [this link](https://symsystem.github.io/ADA_Project/ "SwissTweets").
 
 There are three main tabs: density map, sentiments map and events map. All the pre-processing, manipulation and generation of the JSON files where done by us, except for the data related to the events map (for which we teamed up with another team).
+
+For more information about the pipelines used during the development of this web application, we suggest you to take a look at [this presentation](SwissTweets_presentation.pdf).
+
+### Structure of the repository
+* src : contains the commented sources of the project.
+	* app : the web application (html, javascript, data (json files), styles)
+	* preprocess : Python script for preprocessing the raw data and create the json files
+* docs : the running web application accessible [here](https://symsystem.github.io/ADA_Project/) 
 
 
 ## Data Description
@@ -38,12 +46,12 @@ Furthermore, the web page/web application should take into account the **customi
 
 
 ## Deliverables
-By the end of the project, we would like to deliver a web page/web application with which the users would be able to interact, namely they would be able to go through the timeline to see the evolution of the mobility flows of the users, as well as see the same evolution in a personalized period of time.
+By the end of the project, we would like to deliver a web page/web application with which the users would be able to interact, namely they would be able to go through the timeline to see the evolution of the events in Switzerland and the density of tweets sent by users, as well as see the same evolution in a personalized period of time.
 
 
 ## Timeplan
 
-![alt text](https://github.com/Symsystem/ADA_Project/raw/master/images/gantt_chart.png)
+![alt text](gantt_chart.png)
 
 All the data will be gathered from the clusters during November and, by the end of the month, all the data will be clean (picking the most relevant users, etc...).
 Throughout December, we'll implement the visualization, but in a static way. By the end of the month, we'll start adding interactivity to it. We'll also start drawing some conclusions to help us go from one stage to the other.

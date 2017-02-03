@@ -214,10 +214,12 @@ TopoLayer.prototype.getStyle = function(element) {
 /**
  * @param {List} data : The data that the main layer represents graphically.
  *               The accepted format is a list of objects composed by :
- *               { id : Int, nbr : Int }
+ *               { id (int) : nbr (int) }
  *               such that : - the value of id is the id of a region
  *                           - the value of nbr is the value associated
  *                             to this region.
+ *               Moreover there has to be 2 special ids : max and min associated
+ *               to the max and the min values for the range.
  *
  * @effects Sets the data that the main layer represents and updates the layers.
  */
@@ -230,6 +232,11 @@ TopoLayer.prototype.setData = function(data) {
     this.setActualMaxValue(this.actualMaxValue);
 };
 
+/**
+ * @param {int} max : the max value of the range
+ * @effects Sets the maximum value of the range to max : therefore the values
+ *          higher than max will be considered as equal to max.
+ */
 TopoLayer.prototype.setActualMaxValue = function(max) {
     this.actualMaxValue = max;
 

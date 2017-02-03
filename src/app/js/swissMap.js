@@ -62,6 +62,14 @@ SwissMap.prototype.updateData = function(layerName, data) {
     }
 };
 
+/**
+ * @param {MapLayer} layerName : The layer which will be changed. It has to be
+ *                               an instance of TopoLayer to have an effect.
+ * @param {int} max : the max value of the range
+ * @effects Sets the maximum value of the range of the topoLayer identified by
+ *          layerName to max : therefore the values higher than max will be
+ *          considered as equal to max.
+ */
 SwissMap.prototype.setActualMaxValue = function(layerName, max) {
     var layer;
     for (var i = 0; i < this.layers.length; i++) {
