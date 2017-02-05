@@ -8,7 +8,7 @@ The main goal of this project will be to create an interactive and intuitive map
 
 We would like to start by representing the **density** of the tweets in the different cantons and municipalities of Switzerland.
 
-Then, we would like to make an analysis of the **sentiment** associated with the tweets and, again, a visualization according to canton/municipality would be provided.
+Then, we would like to make an analysis of the **sentiment** associated with the tweets and, again, a visualization according to canton/municipality would be provided. Data used for this map have been predicted with a Convolutionnal Neural Network using TensorFlow
 
 Finally, we would focus on **event detection** and its visualization. In the end, we would like to have an interactive map (similar to an interactive timeline) highlighting the different events at a given time.
 
